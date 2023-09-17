@@ -12,8 +12,9 @@ import eventRoutes from './routes/api/eventRoutes.js';
 import organizerRoutes from './routes/api/organizerRoutes.js';
 import eventFeedbackRoutes from './routes/api/eventFeedbackRoutes.js';
 import paymentRoutes from './routes/api/paymentRoutes.js';
-
+import passwordResetRoutes from './routes/api/passwordResetRoutes.js'
 // Load environment variables
+
 dotenv.config();
 
 // Initialize Express app
@@ -47,13 +48,12 @@ app.use('/users', userRoutes);
 app.use('/organizer', organizerRoutes);
 app.use('/event-feedback', eventFeedbackRoutes);
 app.use('/payments', paymentRoutes);
+app.use('/password-reset', passwordResetRoutes);
 
 
 app.get('/', (req, res) => {
   res.send('Welcome to the Event Management System API');
 });
-
-
 
 // Start the server
 app.listen(port, () => {

@@ -4,18 +4,42 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Form, Card, Button, Container, InputGroup } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
-
+import { Alert } from '@themesberg/react-bootstrap';
 import { Routes as CustomRoutes } from "../../../routes";
+
+async function sendMail(email) {
+  return fetch('http://localhost:5000/password-reset/forgot-password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({email})
+  })
+    .then(data => data.json())
+}
 
 
 const ForgotPassword = () => {
   const [email,setEmail] = useState('');
+  const [error, setError] = useState(null);
 
   const handleEmail = (event) => {
     setEmail(event.target.value);
   }
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+      const response = await sendMail(email);
+      if (response.status === 200) {
+        setError("Password reset email sent successfully");
+      } else {
+        setError(null);
+      }
+    } catch (error) {
+      setError('An error occurred. Please try again later.');
+    }
+
   };
   return (
     <main>
@@ -32,6 +56,9 @@ const ForgotPassword = () => {
                 <h3>Forgot your password?</h3>
                 <p className="mb-4">Don't fret! Just type in your email and we will send you a code to reset your password!</p>
                 <Form onSubmit={handleSubmit}>
+                  {error && <Alert variant="success">
+                    {error}
+                  </Alert>}
                   <div className="mb-4">
                     <Form.Label htmlFor="email">Your Email</Form.Label>
                     <InputGroup id="email" onChange={handleEmail}>

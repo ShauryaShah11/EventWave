@@ -8,6 +8,7 @@ import { Link,useNavigate } from 'react-router-dom';
 import { Routes as CustomRoutes } from "../../../routes";
 import BgImage from "../../../assets/img/illustrations/signin.svg";
 import { Alert } from '@themesberg/react-bootstrap';
+import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
 
 async function loginUser(credentials) {
   return fetch('http://localhost:5000/users/login', {
@@ -42,21 +43,23 @@ const Signin = () => {
         password
       });
   
-      // Assuming you have a state variable or context to store the token
       if (response.token) {
-        localStorage.setItem('token', response.token);
-
-        console.log('Login successful');
-        setError(null); // Clear any previous error
-        navigate(CustomRoutes.DashboardOverview.path); 
-
-      } else {
-        // Handle unexpected response or display a specific error message
-        setError('Incorrect email or password. Please try again.');
-      }
+        const decodedToken = jwt_decode(response.token);
   
-      // Now you can perform further actions with the token, such as navigating to another page.
-      // Example: history.push('/dashboard');
+        if (decodedToken.role === "admin") {
+          localStorage.setItem("adminToken", response.token);
+        } else if (decodedToken.role === "user") {
+          localStorage.setItem("userToken", response.token);
+        } else if (decodedToken.role === "organizer") {
+          localStorage.setItem("organizerToken", response.token);
+        }
+  
+        console.log("Login successful");
+        setError(null);
+        navigate(CustomRoutes.DashboardOverview.path);
+      } else {
+        setError("Incorrect email or password. Please try again.");
+      }
     } catch (error) {
       console.error('Error during login:', error);
       setError('An error occurred. Please try again later.');

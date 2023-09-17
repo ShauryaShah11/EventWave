@@ -18,7 +18,7 @@ import {
 } from "@themesberg/react-bootstrap";
 
 import { CounterWidget } from "../../../components/common/Widgets";
-import { trafficShares, totalOrders } from "../../../data/charts";
+import { trafficShares } from "../../../data/charts";
 import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
 import { Routes as CustomRoutes } from "../../../routes";
 import { useNavigate } from "react-router-dom";
@@ -33,28 +33,28 @@ const DashboardOverview = () => {
     if (token) {
       const decoded = jwt_decode(token);
       setUser(decoded);
+      console.log(user);
     } else {
       setUser(null);
     }
   };
 
   useEffect(() => {
-    // Check if a token is stored in localStorage (or wherever it's stored)
-    const storedToken = localStorage.getItem("token");
-
-    // Decode the stored token and set user state
-    decodeToken(storedToken);
-
-    // Set the token in the state
-    setToken(storedToken);
-    if (!storedToken) {
+    // Check if the admin token is stored in localStorage
+    const adminToken = localStorage.getItem("adminToken");
+  
+    // If the admin token is not present, redirect to the sign-in page
+    if (!adminToken) {
       navigate(CustomRoutes.Signin.path); // Redirect to the sign-in page
+    } else {
+      // Decode the stored token and set user state
+      decodeToken(adminToken);
+  
+      // Set the token in the state
+      setToken(adminToken);
     }
   }, []);
-  if (!token) {
-    return null; // Return null to prevent rendering of the rest of the component
-  }
-
+  
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
