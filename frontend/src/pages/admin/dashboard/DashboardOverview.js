@@ -1,16 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTasks, faUserShield, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCashRegister,
+  faChartLine,
+  faCloudUploadAlt,
+  faPlus,
+  faTasks,
+  faUserShield,
+  faUsers
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  Col,
+  Row,
+  Button,
+  Dropdown,
+  ButtonGroup
+} from "@themesberg/react-bootstrap";
 
-import { CounterWidget, CircleChartWidget, BarChartWidget, TeamMembersWidget, ProgressTrackWidget, RankingWidget, SalesValueWidget, SalesValueWidgetPhone, AcquisitionWidget } from "../../../components/common/Widgets";
-import { PageVisitsTable } from "../../../components/common/Tables";
+import { CounterWidget } from "../../../components/common/Widgets";
 import { trafficShares, totalOrders } from "../../../data/charts";
-import jwt_decode from 'jwt-decode'; // A library to decode JWT tokens
-import {Routes as CustomRoutes } from "../../../routes";
+import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
+import { Routes as CustomRoutes } from "../../../routes";
 import { useNavigate } from "react-router-dom";
 
-const DashboardOverview =  () => {
+const DashboardOverview = () => {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -27,8 +40,8 @@ const DashboardOverview =  () => {
 
   useEffect(() => {
     // Check if a token is stored in localStorage (or wherever it's stored)
-    const storedToken = localStorage.getItem('token');
-    
+    const storedToken = localStorage.getItem("token");
+
     // Decode the stored token and set user state
     decodeToken(storedToken);
 
@@ -46,26 +59,37 @@ const DashboardOverview =  () => {
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
         <Dropdown className="btn-toolbar">
-          <Dropdown.Toggle as={Button} variant="primary" size="sm" className="me-2">
-            <FontAwesomeIcon icon={faPlus} className="me-2" />New Task
+          <Dropdown.Toggle
+            as={Button}
+            variant="primary"
+            size="sm"
+            className="me-2"
+          >
+            <FontAwesomeIcon icon={faPlus} className="me-2" />
+            New Task
           </Dropdown.Toggle>
           <Dropdown.Menu className="dashboard-dropdown dropdown-menu-left mt-2">
             <Dropdown.Item className="fw-bold">
               <FontAwesomeIcon icon={faTasks} className="me-2" /> New Task
             </Dropdown.Item>
             <Dropdown.Item className="fw-bold">
-              <FontAwesomeIcon icon={faCloudUploadAlt} className="me-2" /> Upload Files
+              <FontAwesomeIcon icon={faCloudUploadAlt} className="me-2" />{" "}
+              Upload Files
             </Dropdown.Item>
             <Dropdown.Item className="fw-bold">
-              <FontAwesomeIcon icon={faUserShield} className="me-2" /> Preview Security
+              <FontAwesomeIcon icon={faUserShield} className="me-2" /> Preview
+              Security
             </Dropdown.Item>
-
           </Dropdown.Menu>
         </Dropdown>
 
         <ButtonGroup>
-          <Button variant="outline-primary" size="sm">Share</Button>
-          <Button variant="outline-primary" size="sm">Export</Button>
+          <Button variant="outline-primary" size="sm">
+            Share
+          </Button>
+          <Button variant="outline-primary" size="sm">
+            Export
+          </Button>
         </ButtonGroup>
       </div>
 
@@ -98,7 +122,8 @@ const DashboardOverview =  () => {
             title="50"
             period="Feb 1 - Apr 1"
             icon={faUsers}
-            data={trafficShares} />
+            data={trafficShares}
+          />
         </Col>
       </Row>
 
@@ -126,9 +151,13 @@ const DashboardOverview =  () => {
         </Col>
 
         <Col xs={12} sm={6} xl={4} className="mb-4">
-          <CircleChartWidget
-            title="Traffic Share"
-            data={trafficShares} />
+          <CounterWidget
+            category="Organizor"
+            title="50"
+            period="Feb 1 - Apr 1"
+            icon={faUsers}
+            data={trafficShares}
+          />
         </Col>
       </Row>
 
@@ -156,12 +185,15 @@ const DashboardOverview =  () => {
         </Col>
 
         <Col xs={12} sm={6} xl={4} className="mb-4">
-          <CircleChartWidget
-            title="Traffic Share"
-            data={trafficShares} />
+          <CounterWidget
+            category="Organizor"
+            title="50"
+            period="Feb 1 - Apr 1"
+            icon={faUsers}
+            data={trafficShares}
+          />
         </Col>
       </Row>
-
     </>
   );
 };
