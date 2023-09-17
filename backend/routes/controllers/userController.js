@@ -86,6 +86,30 @@ const userController = {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
+  },
+
+  async removeUser(req, res) {
+    try {
+      const attendeeId = req.params.id;
+
+      // Step 1: Find the attendee by ID to get the associated user ID
+      const attendee = await Attendee.findById(attendeeId);
+      if (!attendee) {
+        return res.status(404).json({ error: 'Attendee not found.' });
+      }
+
+      const userId = attendee.userId; // Assuming 'userId' is the field containing the user's ID.
+
+      // Step 2: Delete the attendee
+      await Attendee.findByIdAndDelete(attendeeId);
+
+      // Step 3: Find and delete the associated user
+      await User.findByIdAndDelete(userId);
+      return res.status(200).json({ message: 'Attendee deleted successfully!' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Failed to delete attendee.' });
+    }
   }
 
   // Add more authentication-related methods as needed

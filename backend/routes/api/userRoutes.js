@@ -4,7 +4,8 @@ import userController from '../controllers/userController.js'; // Import your au
 const router = express.Router();
 
 // Define routes for user authentication
-router.get('/', userController.getAllUsers); // User logout
+router.get('/', userController.getAllUsers); // get all users
+router.delete('/:id', userController.removeUser); // User logout
 router.post('/register', userController.register); // Register a new user
 router.post('/login', userController.login); // User login
 router.post('/logout', userController.logout); // User logout

@@ -76,14 +76,7 @@ const organizerController = {
     }
   },
 
-  
-    // Delete an organizer by ID
-    async deleteOrganizer (req, res) {
-      const organizerId = req.params.id;
-      res.status(200).json({ message: `Organizer ${organizerId} deleted.` });
-    },
-
-    async getAllOrganizer(req, res) {
+  async getAllOrganizer(req, res) {
       try {
         const organizersWithUserDetails = await Organizer.find()
           .populate('userId', 'email username')
@@ -94,7 +87,31 @@ const organizerController = {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
       }
+  },
+
+  async removeOrganizer(req, res) {
+    try {
+      const organizerId = req.params.id;
+
+      // Step 1: Find the organizer by ID to get the associated user ID
+      const organizer = await Organizer.findById(organizerId);
+      if (!organizer) {
+        return res.status(404).json({ error: 'Organizer not found.' });
+      }
+
+      const userId = organizer.userId; // Assuming 'userId' is the field containing the user's ID.
+
+      // Step 2: Delete the organizer
+      await Organizer.findByIdAndDelete(organizerId);
+
+      // Step 3: Find and delete the associated user
+      await User.findByIdAndDelete(userId);
+      return res.status(200).json({ message: 'Organizer deleted successfully!' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Failed to delete Organizer.' });
     }
+  }
   };
   
   export default organizerController;

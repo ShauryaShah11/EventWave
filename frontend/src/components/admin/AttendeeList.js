@@ -5,22 +5,64 @@ import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown  } from '@themesberg/react-bootstrap';
 import { UserTable } from "../common/Tables";
 
-
-
 const AttendeeList = () => {
   const [userData, setUserData] = useState([]);
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/users/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      setUserData(data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const deleteAttendee = async (attendeeId) => {
+    try {
+      console.log("Deleting");
+      const response = await fetch(`http://localhost:5000/users/${attendeeId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      // Assuming the response is a success message or data
+      const data = await response.json();
+      setUserData((prevUserData) =>
+          prevUserData.filter((attendee) => attendee._id !== attendeeId)
+      );
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  
   useEffect(() => {
-    fetch('http://localhost:5000/users/', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-  })
-  .then(response => response.json())
-  .then(data => setUserData(data))
-  .catch(error => console.error(error));
+    fetchData();
   }
   ,[])
+
+  const handleUpdateAttendee = (updatedAttendee) => {
+    
+  };
+
+  const handleDeleteAttendee = (attendeeId) => {
+    deleteAttendee(attendeeId);
+  };
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -40,7 +82,11 @@ const AttendeeList = () => {
           </ButtonGroup>
         </div>
       </div>
-      <UserTable attendees={userData}/>
+      <UserTable 
+        attendees={userData}
+        onDeleteAttendee={handleDeleteAttendee} 
+        onUpdateAttendee={handleUpdateAttendee}
+       />
     </>
   );
 };

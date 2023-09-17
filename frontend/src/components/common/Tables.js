@@ -1,15 +1,13 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, faExternalLinkAlt, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
+import {  Nav, Card,  Table, Pagination, Button } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { Routes } from "../../routes";
-import { pageVisits, pageTraffic, pageRanking } from "../../data/tables";
-import transactions from "../../data/transactions";
+// import { Routes as CustomRoutes } from "../../routes";
 import commands from "../../data/commands";
-
+import ConfirmationModal from "./ConfirmationModal";
 
 const calculateAge = (dateOfBirth) => {
   const dob = new Date(dateOfBirth);
@@ -24,27 +22,32 @@ const calculateAge = (dateOfBirth) => {
   return age;
 };
 
-const ValueChange = ({ value, suffix }) => {
-  const valueIcon = value < 0 ? faAngleDown : faAngleUp;
-  const valueTxtColor = value < 0 ? "text-danger" : "text-success";
+export const UserTable = ({ attendees, onDeleteAttendee, onUpdateAttendee  }) => {
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [selectedAttendeeId, setSelectedAttendeeId] = useState(null);
 
-  return (
-    value ? <span className={valueTxtColor}>
-      <FontAwesomeIcon icon={valueIcon} />
-      <span className="fw-bold ms-1">
-        {Math.abs(value)}{suffix}
-      </span>
-    </span> : "--"
-  );
-};
+  const handleDeleteClick = (attendeeId) => {
+    setSelectedAttendeeId(attendeeId);
+    setShowConfirmationModal(true);
+  };
 
-export const UserTable = ({ attendees }) => {
+  const handleConfirmDelete = () => {
+    onDeleteAttendee(selectedAttendeeId);
+    setShowConfirmationModal(false);
+    setSelectedAttendeeId(null); // Reset the selected attendee ID
+  };
+
+  const handleCancelDelete = () => {
+    setSelectedAttendeeId(null);
+    setShowConfirmationModal(false);
+  };
+
   return (
     <Card border="light" className="table-wrapper table-responsive shadow-sm">
       <Card.Body className="pt-0">
-        <Table hover className="user-table align-items-center">
+        <Table hover className="user-table align-items-center thead-dark">
           <thead>
-            <tr>
+            <tr className="bold-header large-font">
               <th className="border-bottom">#</th>
               <th className="border-bottom">Name</th>
               <th className="border-bottom">Email</th>
@@ -69,10 +72,10 @@ export const UserTable = ({ attendees }) => {
                 <td>
                 <span className="fw-normal">{calculateAge(attendee.dateOfBirth)}</span>
                 </td>
-                <td>
-                  <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
-                  <FontAwesomeIcon icon={faEdit} className="me-2" />
-                </td>
+                <td>                
+                  <Button variant="outline-secondary" className="m-1" onClick={() => onUpdateAttendee(attendee)}>Edit</Button>
+                  <Button variant="outline-danger" className="m-1" onClick={() => handleDeleteClick(attendee._id)}>Delete</Button>
+              </td>
               </tr>
             ))}
           </tbody>
@@ -98,12 +101,36 @@ export const UserTable = ({ attendees }) => {
           </small>
         </Card.Footer>
       </Card.Body>
+      <ConfirmationModal  
+        subject="attendee"                
+        show={showConfirmationModal}
+        onHide={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+      />
     </Card>
   );
 };
 
 
-export const OrganizerTable = ({ organizers }) => {
+export const OrganizerTable = ({ organizers, onDeleteOrganizer, onUpdateOrganizer }) => {
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [selectedOrganizerId, setselectedOrganizerId] = useState(null);
+
+  const handleDeleteClick = (attendeeId) => {
+    setselectedOrganizerId(attendeeId);
+    setShowConfirmationModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    onDeleteOrganizer(selectedOrganizerId);
+    setShowConfirmationModal(false);
+    setselectedOrganizerId(null); // Reset the selected attendee ID
+  };
+
+  const handleCancelDelete = () => {
+    setselectedOrganizerId(null);
+    setShowConfirmationModal(false);
+  };
   return (
     <Card border="light" className="table-wrapper table-responsive shadow-sm">
       <Card.Body className="pt-0">
@@ -135,8 +162,8 @@ export const OrganizerTable = ({ organizers }) => {
                 <span className="fw-normal">{organizer.companyAddress}</span>
                 </td>
                 <td>
-                  <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
-                  <FontAwesomeIcon icon={faEdit} className="me-2" />
+                <Button variant="outline-secondary" className="m-1" onClick={() => onUpdateOrganizer(organizer)}>Edit</Button>
+                  <Button variant="outline-danger" className="m-1" onClick={() => handleDeleteClick(organizer._id)}>Delete</Button>
                 </td>
               </tr>
             ))}
@@ -163,6 +190,12 @@ export const OrganizerTable = ({ organizers }) => {
           </small>
         </Card.Footer>
       </Card.Body>
+      <ConfirmationModal  
+        subject="organizer"                
+        show={showConfirmationModal}
+        onHide={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+      />
     </Card>
   );
 };

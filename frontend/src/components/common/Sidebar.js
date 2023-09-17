@@ -24,7 +24,7 @@ const Sidebar = (props = {}) => {
     const defaultKey = pathname.indexOf(eventKey) !== -1 ? eventKey : "";
 
     return (
-      <Accordion as={Nav.Item} defaultActiveKey={defaultKey}>
+      <Accordion as={Nav.Item} defaultActiveKey={defaultKey}> 
         <Accordion.Item eventKey={eventKey}>
           <Accordion.Button as={Nav.Link} className="d-flex justify-content-between align-items-center">
             <span>
