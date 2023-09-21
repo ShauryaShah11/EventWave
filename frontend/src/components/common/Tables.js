@@ -22,7 +22,7 @@ const calculateAge = (dateOfBirth) => {
   return age;
 };
 
-export const UserTable = ({ attendees, onDeleteAttendee, onUpdateAttendee  }) => {
+export const UserTable = ({ attendees, onDeleteAttendee, onEditAttendee  }) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [selectedAttendeeId, setSelectedAttendeeId] = useState(null);
 
@@ -49,7 +49,8 @@ export const UserTable = ({ attendees, onDeleteAttendee, onUpdateAttendee  }) =>
           <thead>
             <tr className="bold-header large-font">
               <th className="border-bottom">#</th>
-              <th className="border-bottom">Name</th>
+              <th className="border-bottom">Username</th>
+              <th className="border-bottom">Full Name</th>
               <th className="border-bottom">Email</th>
               <th className="border-bottom">Contact Number</th>
               <th className="border-bottom">Age</th>
@@ -60,6 +61,9 @@ export const UserTable = ({ attendees, onDeleteAttendee, onUpdateAttendee  }) =>
             {attendees.map((attendee, index) => (
               <tr key={attendee._id}>
                 <td>{index + 1}</td>
+                <td>
+                  <span className="fw-normal">{attendee.userId.username}</span>
+                </td>
                 <td>
                   <span className="fw-normal">{attendee.fullName}</span>
                 </td>
@@ -73,7 +77,7 @@ export const UserTable = ({ attendees, onDeleteAttendee, onUpdateAttendee  }) =>
                 <span className="fw-normal">{calculateAge(attendee.dateOfBirth)}</span>
                 </td>
                 <td>                
-                  <Button variant="outline-secondary" className="m-1" onClick={() => onUpdateAttendee(attendee)}>Edit</Button>
+                  <Button variant="outline-secondary" className="m-1" onClick={() => onEditAttendee(attendee._id)}>Edit</Button>
                   <Button variant="outline-danger" className="m-1" onClick={() => handleDeleteClick(attendee._id)}>Delete</Button>
               </td>
               </tr>

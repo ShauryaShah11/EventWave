@@ -65,8 +65,7 @@ const Signin = () => {
       setError('An error occurred. Please try again later.');
     }
   
-  };
-  
+  };  
   
   return (
     <main>
@@ -111,7 +110,7 @@ const Signin = () => {
                         <FormCheck.Input id="defaultCheck5" className="me-2" />
                         <FormCheck.Label htmlFor="defaultCheck5" className="mb-0">Remember me</FormCheck.Label>
                       </Form.Check>
-                      <Card.Link className="small text-end">Lost password?</Card.Link>
+                      <Card.Link className="small text-end" onClick={() => navigate(CustomRoutes.ForgotPassword.path)}>Lost password?</Card.Link>
                     </div>
                   </Form.Group>
                   <Button variant="primary" type="submit" className="w-100">

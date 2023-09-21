@@ -5,6 +5,33 @@ import jwt from 'jsonwebtoken'; // Import the jsonwebtoken library
 import nodemailer from "nodemailer";
 
 const userController = {
+  async login(req, res) {
+    try {
+      const email = req.body.email;
+      const password = req.body.password;
+  
+      // Find the user by email
+      const user = await User.findOne({ email });
+      // If user not found or password doesn't match
+      if (!user || !(await bcrypt.compare(password, user.password))) {
+        return res.status(401).json({ error: 'Invalid email or password.' });
+      }
+  
+      // Generate JWT token
+      const token = jwt.sign(
+        { userId: user._id, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+  
+      // Return the token as a JSON response
+      return res.status(200).json({ token });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'An error occurred during login.' });
+    }
+  },  
+
   async register(req, res) {
     // Implementation for user registration
     try {
@@ -40,33 +67,6 @@ const userController = {
       return res.status(500).json({ error: 'Failed to register attendee.' });
     }
   },
-  async login(req, res) {
-    try {
-      const email = req.body.email;
-      const password = req.body.password;
-  
-      // Find the user by email
-      const user = await User.findOne({ email });
-      console.log(email, password);
-      // If user not found or password doesn't match
-      if (!user || !(await bcrypt.compare(password, user.password))) {
-        return res.status(401).json({ error: 'Invalid email or password.' });
-      }
-  
-      // Generate JWT token
-      const token = jwt.sign(
-        { userId: user._id, role: user.role },
-        process.env.JWT_SECRET,
-        { expiresIn: '1h' }
-      );
-  
-      // Return the token as a JSON response
-      return res.status(200).json({ token });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'An error occurred during login.' });
-    }
-  },  
 
   async logout(req, res) {
     // Remove the token from localStorage or cookies
@@ -85,6 +85,63 @@ const userController = {
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+  async getUser(req, res) {
+    const attendeeId = req.params.id; // Use req, not request
+    try {
+      const attendeeWithUserDetails = await Attendee.findById(attendeeId)
+        .populate('userId', 'email username password')
+        .select('fullName dateOfBirth contactNumber');
+  
+      if (!attendeeWithUserDetails) {
+        return res.status(404).json({ error: 'Attendee not found' });
+      }
+  
+      res.json(attendeeWithUserDetails);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },  
+
+  async updateUser(req, res){
+    try{
+      const attendeeId = req.params.id;
+      const { username, email, fullName, contactNumber, dateOfBirth } = req.body;
+
+      // Update the Attendee
+      const attendee = await Attendee.findByIdAndUpdate(
+        attendeeId,
+        {
+          fullName,
+          dateOfBirth,
+          contactNumber,
+        },
+        { new: true }
+      );
+
+      if (!attendee) {
+        return res.status(404).json({ error: 'Attendee not found' });
+      }
+
+      // Find the User associated with the Attendee
+      const user = await User.findById(attendee.userId);
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      // Update the User
+      user.username = username;
+      user.email = email;
+
+      await user.save();
+
+      res.status(200).json({ message: 'Attendee and User updated successfully' });
+    }catch(error){
+      return res.status(500).json({ error: 'Failed to Update attendee.' });
     }
   },
 

@@ -48,6 +48,8 @@ import Toasts from "./components/admin/Toasts";
 
 import AttendeeList from "./components/admin/AttendeeList";
 import OrganizerList from "./components/admin/OrganizerList";
+import EditAttendee from "./components/admin/EditAttendee";
+
 
 
 
@@ -156,6 +158,11 @@ const HomePage =  () => (
       exact
       path={CustomRoutes.AttendeeList.path}
       element={<RouteWithSidebar component={AttendeeList} />}
+    />
+    <Route
+      exact
+      path={CustomRoutes.EditAttendee.path}
+      element={<RouteWithSidebar component={EditAttendee} />}
     />
     <Route
       exact

@@ -1,14 +1,55 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment-timezone";
 import Datetime from "react-datetime";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  Col,
+  Row,
+  Card,
+  Form,
+  Button,
+  InputGroup
+} from "@themesberg/react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
+export const EditAttendeeForm = ({ attendee, onUpdate }) => {
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    fullName: "",
+    email: "",
+    contactNumber: ""
+  });
 
-export const GeneralInfoForm = () => {
-  const [birthday, setBirthday] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (attendee) {
+      const { userId, fullName, contactNumber, dateOfBirth } = attendee;
+      setDateOfBirth(dateOfBirth || "");
+      setFormData({
+        username: userId.username || "",
+        fullName: fullName || "",
+        email: userId.email || "",
+        contactNumber: contactNumber || ""
+      });
+    }
+  }, [attendee]);
+
+  const handleUpdate = async () => {
+    try {
+      // Call the updateAttendee function and pass formData
+      onUpdate({ ...formData, dateOfBirth });
+    } catch (error) {
+      console.error("Error updating attendee:", error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   return (
     <Card border="light" className="bg-white shadow-sm mb-4">
@@ -18,154 +59,103 @@ export const GeneralInfoForm = () => {
           <Row>
             <Col md={6} className="mb-3">
               <Form.Group id="firstName">
-                <Form.Label>First Name</Form.Label>
-                <Form.Control required type="text" placeholder="Enter your first name" />
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="username"
+                  placeholder="Enter your user name"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                />
               </Form.Group>
             </Col>
             <Col md={6} className="mb-3">
               <Form.Group id="lastName">
-                <Form.Label>Last Name</Form.Label>
-                <Form.Control required type="text" placeholder="Also your last name" />
+                <Form.Label>Full Name</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="fullName"
+                  placeholder="Enter your full name"
+                  value={formData.fullName}
+                  onChange={handleInputChange}
+                />
               </Form.Group>
             </Col>
           </Row>
           <Row className="align-items-center">
             <Col md={6} className="mb-3">
-              <Form.Group id="birthday">
-                <Form.Label>Birthday</Form.Label>
-                <Datetime
-                  timeFormat={false}
-                  onChange={setBirthday}
-                  renderInput={(props, openCalendar) => (
-                    <InputGroup>
-                      <InputGroup.Text><FontAwesomeIcon icon={faCalendarAlt} /></InputGroup.Text>
-                      <Form.Control
-                        required
-                        type="text"
-                        value={birthday ? moment(birthday).format("MM/DD/YYYY") : ""}
-                        placeholder="mm/dd/yyyy"
-                        onFocus={openCalendar}
-                        onChange={() => { }} />
-                    </InputGroup>
-                  )} />
-              </Form.Group>
-            </Col>
-            <Col md={6} className="mb-3">
-              <Form.Group id="gender">
-                <Form.Label>Gender</Form.Label>
-                <Form.Select defaultValue="0">
-                  <option value="0">Gender</option>
-                  <option value="1">Female</option>
-                  <option value="2">Male</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6} className="mb-3">
-              <Form.Group id="emal">
+              <Form.Group id="email">
                 <Form.Label>Email</Form.Label>
-                <Form.Control required type="email" placeholder="name@company.com" />
+                <Form.Control
+                  required
+                  type="email"
+                  name="email"
+                  placeholder="name@company.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                />
               </Form.Group>
             </Col>
             <Col md={6} className="mb-3">
               <Form.Group id="phone">
                 <Form.Label>Phone</Form.Label>
-                <Form.Control required type="number" placeholder="+12-345 678 910" />
-              </Form.Group>
-            </Col>
-          </Row>
-
-          <h5 className="my-4">Address</h5>
-          <Row>
-            <Col sm={9} className="mb-3">
-              <Form.Group id="address">
-                <Form.Label>Address</Form.Label>
-                <Form.Control required type="text" placeholder="Enter your home address" />
-              </Form.Group>
-            </Col>
-            <Col sm={3} className="mb-3">
-              <Form.Group id="addressNumber">
-                <Form.Label>Number</Form.Label>
-                <Form.Control required type="number" placeholder="No." />
+                <Form.Control
+                  required
+                  type="number"
+                  name="contactNumber"
+                  placeholder="+12-345 678 910"
+                  value={formData.contactNumber}
+                  onChange={handleInputChange}
+                />
               </Form.Group>
             </Col>
           </Row>
           <Row>
-            <Col sm={4} className="mb-3">
-              <Form.Group id="city">
-                <Form.Label>City</Form.Label>
-                <Form.Control required type="text" placeholder="City" />
-              </Form.Group>
-            </Col>
-            <Col sm={4} className="mb-3">
-              <Form.Group className="mb-2">
-                <Form.Label>Select state</Form.Label>
-                <Form.Select id="state" defaultValue="0">
-                  <option value="0">State</option>
-                  <option value="AL">Alabama</option>
-                  <option value="AK">Alaska</option>
-                  <option value="AZ">Arizona</option>
-                  <option value="AR">Arkansas</option>
-                  <option value="CA">California</option>
-                  <option value="CO">Colorado</option>
-                  <option value="CT">Connecticut</option>
-                  <option value="DE">Delaware</option>
-                  <option value="DC">District Of Columbia</option>
-                  <option value="FL">Florida</option>
-                  <option value="GA">Georgia</option>
-                  <option value="HI">Hawaii</option>
-                  <option value="ID">Idaho</option>
-                  <option value="IL">Illinois</option>
-                  <option value="IN">Indiana</option>
-                  <option value="IA">Iowa</option>
-                  <option value="KS">Kansas</option>
-                  <option value="KY">Kentucky</option>
-                  <option value="LA">Louisiana</option>
-                  <option value="ME">Maine</option>
-                  <option value="MD">Maryland</option>
-                  <option value="MA">Massachusetts</option>
-                  <option value="MI">Michigan</option>
-                  <option value="MN">Minnesota</option>
-                  <option value="MS">Mississippi</option>
-                  <option value="MO">Missouri</option>
-                  <option value="MT">Montana</option>
-                  <option value="NE">Nebraska</option>
-                  <option value="NV">Nevada</option>
-                  <option value="NH">New Hampshire</option>
-                  <option value="NJ">New Jersey</option>
-                  <option value="NM">New Mexico</option>
-                  <option value="NY">New York</option>
-                  <option value="NC">North Carolina</option>
-                  <option value="ND">North Dakota</option>
-                  <option value="OH">Ohio</option>
-                  <option value="OK">Oklahoma</option>
-                  <option value="OR">Oregon</option>
-                  <option value="PA">Pennsylvania</option>
-                  <option value="RI">Rhode Island</option>
-                  <option value="SC">South Carolina</option>
-                  <option value="SD">South Dakota</option>
-                  <option value="TN">Tennessee</option>
-                  <option value="TX">Texas</option>
-                  <option value="UT">Utah</option>
-                  <option value="VT">Vermont</option>
-                  <option value="VA">Virginia</option>
-                  <option value="WA">Washington</option>
-                  <option value="WV">West Virginia</option>
-                  <option value="WI">Wisconsin</option>
-                  <option value="WY">Wyoming</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-            <Col sm={4}>
-              <Form.Group id="zip">
-                <Form.Label>ZIP</Form.Label>
-                <Form.Control required type="tel" placeholder="ZIP" />
+            <Col md={6} className="mb-3">
+              <Form.Group id="birthday">
+                <Form.Label>Birthday</Form.Label>
+                <Datetime
+                  timeFormat={false}
+                  onChange={setDateOfBirth}
+                  renderInput={(props, openCalendar) => (
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                      </InputGroup.Text>
+                      <Form.Control
+                        required
+                        type="text"
+                        value={
+                          dateOfBirth
+                            ? moment(dateOfBirth).format("MM/DD/YYYY")
+                            : ""
+                        }
+                        placeholder="mm/dd/yyyy"
+                        onFocus={openCalendar}
+                        onChange={() => {}}
+                      />
+                    </InputGroup>
+                  )}
+                />
               </Form.Group>
             </Col>
           </Row>
-          <div className="mt-3">
-            <Button variant="primary" type="submit">Save All</Button>
+          <div className="d-flex justify-content-center">
+            <Button
+              variant="secondary"
+              type="button"
+              className="me-2"
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              Back
+            </Button>
+            <Button variant="primary" type="button" onClick={handleUpdate}>
+              Update
+            </Button>
           </div>
         </Form>
       </Card.Body>

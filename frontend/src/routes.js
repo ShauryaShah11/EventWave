@@ -7,6 +7,7 @@ export const Routes = {
     Settings: { path: "/settings" },
     Upgrade: { path: "/upgrade" },
     AttendeeList: { path: "/admin/attendees" },
+    EditAttendee : { path: "/admin/edit-attendee"},
     OrganizerList: { path: "/admin/orgaizers" },
     Billing: { path: "/examples/billing" },
     Invoice: { path: "/examples/invoice" },

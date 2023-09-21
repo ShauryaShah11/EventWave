@@ -42,72 +42,86 @@ const passwordResetController = {
         const subject = "Password Reset"; // Subject of the email       
     
         const htmlBody = `
-          <html>
-            <head>
-              <style>
-                /* Global styles */
-                body {
-                  font-family: Arial, sans-serif;
-                  margin: 0;
-                  padding: 0;
-                  background-color: #f0f0f0;
-                }
-
-                /* Container styles */
-                .container {
-                  max-width: 600px;
-                  margin: 0 auto;
-                  padding: 20px;
-                  background-color: #ffffff;
-                  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                  border-radius: 5px;
-                }
-
-                /* Header styles */
-                .header {
-                  background-color: #007bff;
-                  color: #ffffff;
-                  text-align: center;
-                  padding: 20px 0;
-                }
-
-                /* Content styles */
-                .content {
-                  padding: 20px;
-                }
-
-                /* Link styles */
-                .reset-link {
-                  color: #007bff;
-                  text-decoration: none;
-                  font-weight: bold;
-                }
-
-                /* Button styles */
-                .reset-button {
-                  display: inline-block;
-                  padding: 10px 20px;
-                  background-color: #007bff;
-                  color: #ffffff;
-                  text-decoration: none;
-                  border-radius: 5px;
-                  margin-top: 20px;
-                }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <div class="header">
-                  <h1>Password Reset</h1>
-                </div>
-                <div class="content">
-                  <p>You have requested a password reset. Click the button below to reset your password:</p>
-                  <p><a class="reset-link" href="http://localhost:3000/#/reset-password?id=${user._id}&token=${token}">Reset Password</a></p>
-                  <a class="reset-button" href="http://localhost:3000/#/reset-password?id=${user._id}&token=${token}">Reset Password</a>
-                </div>
-              </div>
-            </body>
-          </html>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Password Reset - Occasia Event Management</title>
+          <style>
+            /* Global styles */
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              background-color: #f0f0f0;
+            }
+        
+            /* Container styles */
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #ffffff;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+              border-radius: 5px;
+            }
+        
+            /* Header styles */
+            .header {
+              background-color: #007bff;
+              color: #ffffff;
+              text-align: center;
+              padding: 20px 0;
+            }
+        
+            /* Content styles */
+            .content {
+              padding: 20px;
+              text-align: center;
+            }
+        
+            /* Link styles */
+            .reset-link {
+              color: #007bff;
+              text-decoration: none;
+              font-weight: bold;
+            }
+        
+            /* Button styles */
+            .reset-button {
+              display: inline-block;
+              padding: 10px 20px;
+              background-color: #007bff;
+              color: #ffffff;
+              text-decoration: none;
+              border-radius: 5px;
+              margin-top: 20px;
+              transition: background-color 0.3s;
+            }
+        
+            .reset-button:hover {
+              background-color: #0056b3;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Password Reset</h1>
+            </div>
+            <div class="content">
+              <p>Hello,</p>
+              <p>You have requested a password reset for Occasia Event Management.</p>
+              <p>Click the button below to reset your password:</p>
+              <a class="reset-link" href="http://localhost:3000/#/reset-password?id=${user._id}&token=${token}">
+                <button class="reset-button">Reset Password</button>
+              </a>
+            </div>
+          </div>
+        </body>
+        </html>
+        
         `;
 
         // Create an email message
