@@ -12,7 +12,7 @@ const AttendeeList = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:5000/users/", {
+      const response = await fetch("http://localhost:8000/users/", {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
@@ -34,7 +34,7 @@ const AttendeeList = () => {
     try {
       console.log("Deleting");
       const response = await fetch(
-        `http://localhost:5000/users/${attendeeId}`,
+        `http://localhost:8000/users/${attendeeId}`,
         {
           method: "DELETE",
           headers: {

@@ -11,7 +11,7 @@ import { Alert } from '@themesberg/react-bootstrap';
 import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
 
 async function loginUser(credentials) {
-  return fetch('http://localhost:5000/users/login', {
+  return fetch('http://localhost:8000/users/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

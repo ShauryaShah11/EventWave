@@ -166,7 +166,7 @@ export const OrganizerTable = ({ organizers, onDeleteOrganizer, onUpdateOrganize
                 <span className="fw-normal">{organizer.companyAddress}</span>
                 </td>
                 <td>
-                <Button variant="outline-secondary" className="m-1" onClick={() => onUpdateOrganizer(organizer)}>Edit</Button>
+                <Button variant="outline-secondary" className="m-1" onClick={() => onUpdateOrganizer(organizer._id)}>Edit</Button>
                   <Button variant="outline-danger" className="m-1" onClick={() => handleDeleteClick(organizer._id)}>Delete</Button>
                 </td>
               </tr>

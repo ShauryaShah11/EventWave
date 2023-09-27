@@ -133,6 +133,20 @@ const userController = {
         return res.status(404).json({ error: 'User not found' });
       }
 
+      // Check if email already exists in the database
+      const existingEmailUser = await User.findOne({ email });
+
+      if (existingEmailUser && existingEmailUser._id.toString() !== user._id.toString()) {
+        return res.status(400).json({ error: 'Email already exists' });
+      }
+
+      // Check if contact number already exists in the database
+      const existingContactNumberUser = await User.findOne({ contactNumber });
+
+      if (existingContactNumberUser && existingContactNumberUser._id.toString() !== user._id.toString()) {
+        return res.status(400).json({ error: 'Contact number already exists' });
+      }
+      
       // Update the User
       user.username = username;
       user.email = email;

@@ -30,7 +30,7 @@ const ResetPassword = () => {
 
     // Send a request to your server to reset the password
     try {
-      const response = await fetch('http://localhost:5000/password-reset/reset-password', {
+      const response = await fetch('http://localhost:8000/password-reset/reset-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

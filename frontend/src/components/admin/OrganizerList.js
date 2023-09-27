@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -12,12 +13,16 @@ import {
   Dropdown
 } from "@themesberg/react-bootstrap";
 import { OrganizerTable, UserTable } from "../common/Tables";
+import { Routes as CustomRoutes } from "../../routes";
 
 const OrganizerList = () => {
   const [organizerData, setOrganizerData] = useState([]);
+  const navigate = useNavigate();
+
+
   const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:5000/organizer/", {
+      const response = await fetch("http://localhost:8000/organizer/", {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
@@ -39,7 +44,7 @@ const OrganizerList = () => {
     try {
       console.log("Deleting");
       const response = await fetch(
-        `http://localhost:5000/organizer/${organizerId}`,
+        `http://localhost:8000/organizer/${organizerId}`,
         {
           method: "DELETE",
           headers: {
@@ -64,7 +69,11 @@ const OrganizerList = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  const handleUpdateOrganizer = (updatedOrganizer) => {};
+  const handleUpdateOrganizer = (organizerId) => {
+    navigate(CustomRoutes.EditOrganizer.path + `?id=${organizerId}`);
+
+    
+  };
 
   const handleDeleteOrganizer = (organizerId) => {
     deleteOrganizer(organizerId);

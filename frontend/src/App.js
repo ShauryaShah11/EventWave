@@ -49,8 +49,7 @@ import Toasts from "./components/admin/Toasts";
 import AttendeeList from "./components/admin/AttendeeList";
 import OrganizerList from "./components/admin/OrganizerList";
 import EditAttendee from "./components/admin/EditAttendee";
-
-
+import EditOrganizer from "./components/admin/EditOrganizer";
 
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
@@ -168,6 +167,11 @@ const HomePage =  () => (
       exact
       path={CustomRoutes.OrganizerList.path}
       element={<RouteWithSidebar component={OrganizerList} />}
+    />
+    <Route
+      exact
+      path={CustomRoutes.EditOrganizer.path}
+      element={<RouteWithSidebar component={EditOrganizer} />}
     />
 
 

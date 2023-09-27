@@ -8,6 +8,7 @@ export const Routes = {
     Upgrade: { path: "/upgrade" },
     AttendeeList: { path: "/admin/attendees" },
     EditAttendee : { path: "/admin/edit-attendee"},
+    EditOrganizer : { path: "/admin/edit-organizer"},
     OrganizerList: { path: "/admin/orgaizers" },
     Billing: { path: "/examples/billing" },
     Invoice: { path: "/examples/invoice" },

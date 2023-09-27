@@ -10,7 +10,7 @@ import { UserTable } from "../common/Tables";
 const BootstrapTables = () => {
   const [userData, setUserData] = useState([]);
   useEffect(() => {
-    fetch('http://localhost:5000/users/info', {
+    fetch('http://localhost:8000/users/info', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'

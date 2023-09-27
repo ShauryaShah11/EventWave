@@ -3,22 +3,22 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileAlt, faPlus, faRocket } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Button, Dropdown } from "@themesberg/react-bootstrap";
-import { EditAttendeeForm } from "../common/Forms";
+import { EditOrganizerForm } from "../common/Forms";
 import { Routes as CustomRoutes } from "../../routes";
 
-const EditAttendee = () => {
-  const [userData, setUserData] = useState();
+const EditOrganizer = () => {
+  const [organizerData, setOrganizerData] = useState();
   const [errorMessage, setErrorMessage] = useState(null);
 
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const attendeeId = searchParams.get("id");
+  const organizerId = searchParams.get("id");
 
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/users/${attendeeId}`,
+        `http://localhost:8000/organizer/${organizerId}`,
         {
           method: "GET",
           headers: {
@@ -31,25 +31,25 @@ const EditAttendee = () => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      setUserData(data);
+      setOrganizerData(data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const updateAttendee = async (attendeeData) => {
+  const updateOrganizer = async (organizerData) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/users/${attendeeId}`,
+        `http://localhost:8000/organizer/${organizerId}`,
         {
           method: "PUT", // Use 'PUT' method to update the attendee
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(attendeeData)
+          body: JSON.stringify(organizerData)
         }
       );
-
+      
       if (!response.ok) {
         const responseData = await response.json(); // Parse the response JSON
         const errorMessage = responseData.error; // Extract the error message
@@ -59,17 +59,17 @@ const EditAttendee = () => {
         throw new Error("Network response was not ok");
       }
       else{
-        navigate(CustomRoutes.AttendeeList.path);
+        navigate(CustomRoutes.OrganizerList.path);
       }
     } catch (error) {
       // Handle errors, e.g., show an error message or log the error
-      console.error("Error updating attendee:", error);
+      console.error("Error updating Organizer:", error);
     }
   };
 
   useEffect(() => {
     fetchData();
-  }, [attendeeId]);
+  }, [organizerId]);
 
   return (
     <>
@@ -97,11 +97,11 @@ const EditAttendee = () => {
 
       <Row>
         <Col xs={12} xl={12}>
-          <EditAttendeeForm attendee={userData} onUpdate={updateAttendee} errorMessage={errorMessage}/>
+          <EditOrganizerForm organizer={organizerData} onUpdate={updateOrganizer} errorMessage={errorMessage}/>
         </Col>
       </Row>
     </>
   );
 };
 
-export default EditAttendee;
+export default EditOrganizer;

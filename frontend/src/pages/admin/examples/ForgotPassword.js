@@ -8,7 +8,7 @@ import { Alert } from '@themesberg/react-bootstrap';
 import { Routes as CustomRoutes } from "../../../routes";
 
 async function sendMail(email) {
-  return fetch('http://localhost:5000/password-reset/forgot-password', {
+  return fetch('http://localhost:8000/password-reset/forgot-password', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
