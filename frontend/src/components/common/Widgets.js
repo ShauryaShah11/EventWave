@@ -18,12 +18,7 @@ export const ProfileCardWidget = () => {
         <Card.Img src={Profile1} alt="Neil Portrait" className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4" />
         <Card.Title>Neil Sims</Card.Title>
         <Card.Subtitle className="fw-normal">Senior Software Engineer</Card.Subtitle>
-        <Card.Text className="text-gray mb-4">New York, USA</Card.Text>
-
-        <Button variant="primary" size="sm" className="me-2">
-          <FontAwesomeIcon icon={faUserPlus} className="me-1" /> Connect
-        </Button>
-        <Button variant="secondary" size="sm">Send Message</Button>
+        <Card.Text className="text-gray mb-2">New York, USA</Card.Text>
       </Card.Body>
     </Card>
   );

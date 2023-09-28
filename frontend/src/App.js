@@ -14,17 +14,8 @@ import Lock from "./pages/admin/examples/Lock";
 import NotFoundPage from "./pages/admin/examples/NotFound";
 import ServerError from "./pages/admin/examples/ServerError";
 
-// documentation pages
-import DocsOverview from "./components/documentation/DocsOverview";
-import DocsDownload from "./components/documentation/DocsDownload";
-import DocsQuickStart from "./components/documentation/DocsQuickStart";
-import DocsLicense from "./components/documentation/DocsLicense";
-import DocsFolderStructure from "./components/documentation/DocsFolderStructure";
-import DocsBuild from "./components/documentation/DocsBuild";
-import DocsChangelog from "./components/documentation/DocsChangelog";
-
 // components
-import Sidebar from "./components/common/Sidebar";
+import AdminSidebar from "./components/admin/Sidebar";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import Preloader from "./components/common/Preloader";
@@ -51,6 +42,10 @@ import OrganizerList from "./components/admin/OrganizerList";
 import EditAttendee from "./components/admin/EditAttendee";
 import EditOrganizer from "./components/admin/EditOrganizer";
 
+// Organizer import
+import OrganizerSidebar from "./components/organizer/Sidabar";
+import OrganizerDashboard from "./pages/organizer/DashboardOverview";
+import AddEvent from "./components/organizer/AddEvent";
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -65,7 +60,7 @@ const RouteWithLoader = ({ component: Component, ...rest }) => {
   );
 };
 
-const RouteWithSidebar = ({ component: Component, ...rest }) => {
+const RouteWithAdminSidebar = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -87,7 +82,41 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
   return (
       <>
       <Preloader show={loaded ? false : true} />
-        <Sidebar />
+        <AdminSidebar />
+        <div className="content">
+          <Navbar />
+          <main>
+            <Component {...rest} />
+            <Footer toggleSettings={toggleSettings} showSettings={showSettings} />
+          </main>
+        </div>
+      </>
+  );
+};
+
+const RouteWithOrganizerSidebar = ({ component: Component, ...rest }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoaded(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const localStorageIsSettingsVisible = () => {
+    return localStorage.getItem('settingsVisible') === 'false' ? false : true;
+  };
+
+  const [showSettings, setShowSettings] = useState(localStorageIsSettingsVisible);
+
+  const toggleSettings = () => {
+    setShowSettings(!showSettings);
+    localStorage.setItem('settingsVisible', !showSettings);
+  };
+
+  return (
+      <>
+      <Preloader show={loaded ? false : true} />
+        <OrganizerSidebar />
         <div className="content">
           <Navbar />
           <main>
@@ -101,7 +130,6 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
 
 const HomePage =  () => (
   <Routes>
-    {/* <RouteWithLoader exact path={CustomRoutes.Presentation.path} component={Presentation} /> */}
     <Route
       exact
       path={CustomRoutes.Signin.path}
@@ -140,160 +168,135 @@ const HomePage =  () => (
 
     <Route
       exact
-      path={CustomRoutes.DashboardOverview.path}
-      element={<RouteWithSidebar component={DashboardOverview} />}
+      path={CustomRoutes.AdminDashboard.path}
+      element={<RouteWithAdminSidebar component={DashboardOverview} />}
     />
     <Route
       exact
       path={CustomRoutes.Presentation.path}
-      element={<RouteWithSidebar component={DashboardOverview} />}
+      element={<RouteWithAdminSidebar component={DashboardOverview} />}
     />
     <Route
       exact
       path={CustomRoutes.Settings.path}
-      element={<RouteWithSidebar component={Settings} />}
+      element={<RouteWithAdminSidebar component={Settings} />}
     />
     <Route
       exact
       path={CustomRoutes.AttendeeList.path}
-      element={<RouteWithSidebar component={AttendeeList} />}
+      element={<RouteWithAdminSidebar component={AttendeeList} />}
     />
     <Route
       exact
       path={CustomRoutes.EditAttendee.path}
-      element={<RouteWithSidebar component={EditAttendee} />}
+      element={<RouteWithAdminSidebar component={EditAttendee} />}
     />
     <Route
       exact
       path={CustomRoutes.OrganizerList.path}
-      element={<RouteWithSidebar component={OrganizerList} />}
+      element={<RouteWithAdminSidebar component={OrganizerList} />}
     />
     <Route
       exact
       path={CustomRoutes.EditOrganizer.path}
-      element={<RouteWithSidebar component={EditOrganizer} />}
+      element={<RouteWithAdminSidebar component={EditOrganizer} />}
     />
 
+    {/* Organizer Routes */}
+    <Route
+      exact
+      path={CustomRoutes.OrganizerDashboard.path}
+      element={<RouteWithOrganizerSidebar component={OrganizerDashboard} />}
+    />
+    <Route
+      exact
+      path={CustomRoutes.AddEvents.path}
+      element={<RouteWithOrganizerSidebar component={AddEvent} />}
+    />
 
+    {/* Example Components Routes */}
     <Route
       exact
       path={CustomRoutes.Accordions.path}
-      element={<RouteWithSidebar component={Accordion} />}
+      element={<RouteWithAdminSidebar component={Accordion} />}
     />
     <Route
       exact
       path={CustomRoutes.Alerts.path}
-      element={<RouteWithSidebar component={Alerts} />}
+      element={<RouteWithAdminSidebar component={Alerts} />}
     />
     <Route
       exact
       path={CustomRoutes.Badges.path}
-      element={<RouteWithSidebar component={Badges} />}
+      element={<RouteWithAdminSidebar component={Badges} />}
     />
     <Route
       exact
       path={CustomRoutes.Breadcrumbs.path}
-      element={<RouteWithSidebar component={Breadcrumbs} />}
+      element={<RouteWithAdminSidebar component={Breadcrumbs} />}
     />
     <Route
       exact
       path={CustomRoutes.Buttons.path}
-      element={<RouteWithSidebar component={Buttons} />}
+      element={<RouteWithAdminSidebar component={Buttons} />}
     />
     <Route
       exact
       path={CustomRoutes.Forms.path}
-      element={<RouteWithSidebar component={Forms} />}
+      element={<RouteWithAdminSidebar component={Forms} />}
     />
     <Route
       exact
       path={CustomRoutes.Modals.path}
-      element={<RouteWithSidebar component={Modals} />}
+      element={<RouteWithAdminSidebar component={Modals} />}
     />
     <Route
       exact
       path={CustomRoutes.Navs.path}
-      element={<RouteWithSidebar component={Navs} />}
+      element={<RouteWithAdminSidebar component={Navs} />}
     />
     <Route
       exact
       path={CustomRoutes.Navbars.path}
-      element={<RouteWithSidebar component={Navbars} />}
+      element={<RouteWithAdminSidebar component={Navbars} />}
     />
     <Route
       exact
       path={CustomRoutes.Pagination.path}
-      element={<RouteWithSidebar component={Pagination} />}
+      element={<RouteWithAdminSidebar component={Pagination} />}
     />
     <Route
       exact
       path={CustomRoutes.Popovers.path}
-      element={<RouteWithSidebar component={Popovers} />}
+      element={<RouteWithAdminSidebar component={Popovers} />}
     />
     <Route
       exact
       path={CustomRoutes.Progress.path}
-      element={<RouteWithSidebar component={Progress} />}
+      element={<RouteWithAdminSidebar component={Progress} />}
     />
     <Route
       exact
       path={CustomRoutes.Tables.path}
-      element={<RouteWithSidebar component={Tables} />}
+      element={<RouteWithAdminSidebar component={Tables} />}
     />
     <Route
       exact
       path={CustomRoutes.Tabs.path}
-      element={<RouteWithSidebar component={Tabs} />}
+      element={<RouteWithAdminSidebar component={Tabs} />}
     />
     <Route
       exact
       path={CustomRoutes.Tooltips.path}
-      element={<RouteWithSidebar component={Tooltips} />}
+      element={<RouteWithAdminSidebar component={Tooltips} />}
     />
     <Route
       exact
       path={CustomRoutes.Toasts.path}
-      element={<RouteWithSidebar component={Toasts} />}
+      element={<RouteWithAdminSidebar component={Toasts} />}
     />
 
-    {/* documentation */}
-    <Route
-      exact
-      path={CustomRoutes.DocsOverview.path}
-      element={<RouteWithSidebar component={DocsOverview} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.DocsDownload.path}
-      element={<RouteWithSidebar component={DocsDownload} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.DocsQuickStart.path}
-      element={<RouteWithSidebar component={DocsQuickStart} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.DocsLicense.path}
-      element={<RouteWithSidebar component={DocsLicense} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.DocsFolderStructure.path}
-      element={<RouteWithSidebar component={DocsFolderStructure} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.DocsBuild.path}
-      element={<RouteWithSidebar component={DocsBuild} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.DocsChangelog.path}
-      element={<RouteWithSidebar component={DocsChangelog} />}
-    />
-
-    navigate(CustomRoutes.NotFound.path);
+    <Route path="*" element={<NotFoundPage />} />
     {/* <Redirect to={CustomRoutes.NotFound.path} /> */}
   </Routes>
 );

@@ -20,8 +20,18 @@ const eventSchema = new mongoose.Schema({
         min: 0, // Assuming ticket price cannot be negative
         required: true,
     },
-    eventImage: String,
-    // Other event-specific fields      
+    eventImages: [
+        {
+            type: String,
+            // You can add validation for image uploads here
+        },
+    ],
+    eventAddress: {
+        type: Schema.Types.ObjectId,
+        ref: 'Address', // Reference the 'Address' model
+        required: true,
+    },
+    // Add any other event-specific fields here
 });
 
 const Event = mongoose.model('Event', eventSchema);

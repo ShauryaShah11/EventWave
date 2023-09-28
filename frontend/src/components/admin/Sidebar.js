@@ -68,7 +68,7 @@ const Sidebar = (props = {}) => {
   return (
     <>
       <Navbar expand={false} collapseOnSelect variant="dark" className="navbar-theme-primary px-4 d-md-none">
-        <Navbar.Brand className="me-lg-5" as={Link} to={CustomRoutes.DashboardOverview.path}>
+        <Navbar.Brand className="me-lg-5" as={Link} to={CustomRoutes.AdminDashboard.path}>
           <Image src={ReactHero} className="navbar-brand-light" />
         </Navbar.Brand>
         <Navbar.Toggle as={Button} aria-controls="main-navbar" onClick={onCollapse}>
@@ -97,17 +97,11 @@ const Sidebar = (props = {}) => {
             <Nav className="flex-column pt-3 pt-md-0">
               <NavItem title="Occasia" link={CustomRoutes.Presentation.path} image={ReactHero} />
 
-              <NavItem title="Overview" link={CustomRoutes.DashboardOverview.path} icon={faChartPie} />
+              <NavItem title="Overview" link={CustomRoutes.AdminDashboard.path} icon={faChartPie} />
               <NavItem title="Settings" icon={faCog} link={CustomRoutes.Settings.path} />
 
               <NavItem title="User List" icon={faUserFriends} link={CustomRoutes.AttendeeList.path} />
-              <NavItem title="Organizer List" icon={faUserFriends} link={CustomRoutes.OrganizerList.path} />
-
-              {/* <CollapsableNavItem eventKey="tables/" title="Tables" icon={faUserFriends}>
-                <NavItem title="Bootstrap Table" link={CustomRoutes.BootstrapTables.path} />
-              </CollapsableNavItem> */}
-
-              
+              <NavItem title="Organizer List" icon={faUserFriends} link={CustomRoutes.OrganizerList.path} />              
 
 
               <Dropdown.Divider className="my-3 border-indigo" />
@@ -122,15 +116,6 @@ const Sidebar = (props = {}) => {
                 <NavItem title="500 Server Error" link={CustomRoutes.ServerError.path} />
               </CollapsableNavItem>
 
-              <CollapsableNavItem id="Hello" eventKey="documentation/" title="Getting Started" icon={faBook}>
-                <NavItem title="Overview" link={CustomRoutes.DocsOverview.path} />
-                <NavItem title="Download" link={CustomRoutes.DocsDownload.path} />
-                <NavItem title="Quick Start" link={CustomRoutes.DocsQuickStart.path} />
-                <NavItem title="License" link={CustomRoutes.DocsLicense.path} />
-                <NavItem title="Folder Structure" link={CustomRoutes.DocsFolderStructure.path} />
-                <NavItem title="Build Tools" link={CustomRoutes.DocsBuild.path} />
-                <NavItem title="Changelog" link={CustomRoutes.DocsChangelog.path} />
-              </CollapsableNavItem>
               <CollapsableNavItem eventKey="components/" title="Components" icon={faBoxOpen}>
                 <NavItem title="Accordion" link={CustomRoutes.Accordions.path} />
                 <NavItem title="Alerts" link={CustomRoutes.Alerts.path} />

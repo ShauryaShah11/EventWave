@@ -10,7 +10,6 @@ const ticketSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
-    // Other ticket-specific fields
 });
 
 const Tickets = mongoose.model('Tickets', ticketSchema);

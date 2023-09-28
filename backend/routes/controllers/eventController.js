@@ -1,37 +1,68 @@
 import Event from '../../models/Event.js'; // Import your Event model
+import Address from '../../models/Address.js';
 import EventAttendees from '../../models/EventAttendees.js';
 import PaymentTransactions from '../../models/PaymentTransactions.js';
+import { upload } from '../../config/multerConfig.js'; // Adjust the path as needed
+
+// Your event controller code here
 
 const eventController = {
     // GET all events
-    postEvent: async (req, res) => {
-        try {
-          const {
-            organizerId,
-            eventName,
-            eventDescription,
-            eventDate,
-            ticketPrice,
-            eventImage,
-          } = req.body;
-    
-          const newEvent = new Event({
-            organizerId,
-            eventName,
-            eventDescription,
-            eventDate,
-            ticketPrice,
-            eventImage,
-          });
-    
-          await newEvent.save();
-    
-          return res.status(201).json({ message: 'Event created successfully!' });
-        } catch (error) {
-          console.error(error);
-          return res.status(500).json({ error: 'Failed to create event.' });
-        }
-    },
+    postEvent: [upload.array('eventImages', 5), async (req, res) => {
+      console.log(req.body);
+      console.log(req.files);
+  
+      try {
+        const {
+          organizerId,
+          eventName,
+          eventDescription,
+          eventDate,
+          ticketPrice,
+          street,
+          city,
+          state,
+          country,
+          zipcode,
+        } = req.body;
+  
+
+        const images = req.files.map((file) => file.filename);
+  
+        // Create a new address
+        const newAddress = new Address({
+          street,
+          city,
+          state,
+          country,
+          zipCode: zipcode
+        });
+  
+        // Save the address to the database
+        const savedAddress = await newAddress.save();
+  
+        // Create a new event and associate it with the address and images
+        const newEvent = new Event({
+          organizerId,
+          eventName,
+          eventDescription,
+          eventDate,
+          ticketPrice,
+          eventImages: images,
+          eventAddress: savedAddress._id // Use the saved address here
+        });
+  
+        // Save the event to the database
+        const savedEvent = await newEvent.save();
+  
+        // Respond with the newly created event's details
+        return res.status(201).json({ message: 'Event created successfully', event: savedEvent });
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to create event', details: error.message });
+      }
+    }], 
+ 
    
     // Get all events
     getAllEvents: async (req, res) => {

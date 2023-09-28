@@ -1,21 +1,25 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
+
+const { Schema } = mongoose;
 
 const paymentSchema = new mongoose.Schema({
     eventId: {
         type: Schema.Types.ObjectId,
-        ref: 'Events',
+        ref: 'Event', // Reference the 'Event' model
         required: true,
     },
     attendeeId: {
         type: Schema.Types.ObjectId,
-        ref: 'Attendees',
+        ref: 'Attendee', // Reference the 'Attendee' model
         required: true,
     },
-    paymentDate: Date,
+    paymentDate: {
+        type: Date,
+    },
     paymentStatus: {
         type: String,
-        // required: true,
-        enum: ['completed', 'pending', 'failed'], // Enum values for payment status
+        enum: ['completed', 'pending', 'failed'],
+        required: true // Consider whether you want this to be required
     },
 });
 

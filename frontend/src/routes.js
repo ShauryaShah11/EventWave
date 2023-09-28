@@ -2,10 +2,7 @@
 export const Routes = {
     // pages
     Presentation: { path: "/" },
-    DashboardOverview: { path: "/dashboard/overview" },
-    Transactions: { path: "/transactions" },
-    Settings: { path: "/settings" },
-    Upgrade: { path: "/upgrade" },
+    AdminDashboard: { path: "/admin/dashboard" },
     AttendeeList: { path: "/admin/attendees" },
     EditAttendee : { path: "/admin/edit-attendee"},
     EditOrganizer : { path: "/admin/edit-organizer"},
@@ -19,15 +16,14 @@ export const Routes = {
     Lock: { path: "/examples/lock" },
     NotFound: { path: "/examples/404" },
     ServerError: { path: "/examples/500" },
+    Transactions: { path: "/transactions" },
+    Settings: { path: "/settings" },
+    Upgrade: { path: "/upgrade" },
 
-    // docs
-    DocsOverview: { path: "/documentation/overview" },
-    DocsDownload: { path: "/documentation/download" },
-    DocsQuickStart: { path: "/documentation/quick-start" },
-    DocsLicense: { path: "/documentation/license" },
-    DocsFolderStructure: { path: "/documentation/folder-structure" },
-    DocsBuild: { path: "/documentation/build-tools" },
-    DocsChangelog: { path: "/documentation/changelog" },
+    // organizer
+    OrganizerDashboard: { path: "/organizer/dashboard" },
+    AddEvents: { path: "/organizer/events/add" },
+    
 
     // components
     Accordions: { path: "/components/accordions" },

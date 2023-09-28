@@ -3,12 +3,12 @@ import mongoose, { Schema } from 'mongoose';
 const eventAttendeesSchema = new mongoose.Schema({
     eventId: {
         type: Schema.Types.ObjectId,
-        ref: 'Events',
+        ref: 'Event', // Reference the 'Event' model
         required: true,
     },
     attendeeId: {
         type: Schema.Types.ObjectId,
-        ref: 'Attendees',
+        ref: 'Attendee', // Reference the 'Attendee' model
         required: true,
     },
     attendanceStatus: {

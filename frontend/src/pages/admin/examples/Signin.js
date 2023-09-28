@@ -48,15 +48,18 @@ const Signin = () => {
   
         if (decodedToken.role === "admin") {
           localStorage.setItem("adminToken", response.token);
+          navigate(CustomRoutes.AdminDashboard.path);
+
         } else if (decodedToken.role === "user") {
           localStorage.setItem("userToken", response.token);
+
         } else if (decodedToken.role === "organizer") {
           localStorage.setItem("organizerToken", response.token);
+          navigate(CustomRoutes.OrganizerDashboard.path);
         }
   
         console.log("Login successful");
         setError(null);
-        navigate(CustomRoutes.DashboardOverview.path);
       } else {
         setError("Incorrect email or password. Please try again.");
       }
@@ -72,7 +75,7 @@ const Signin = () => {
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
         <Container>
           <p className="text-center">
-            <Card.Link as={Link} to={CustomRoutes.DashboardOverview.path} className="text-gray-700">
+            <Card.Link as={Link} to={CustomRoutes.AdminDashboard.path} className="text-gray-700">
               <FontAwesomeIcon icon={faAngleLeft} className="me-2" /> Back to homepage
             </Card.Link>
           </p>

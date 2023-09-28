@@ -33,38 +33,33 @@ const userController = {
   },  
 
   async register(req, res) {
-    // Implementation for user registration
     try {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
       // Create a new user
       const newUser = new User({
-        username: req.body.username,
-        email: req.body.email,
-        password: hashedPassword,
-        role: "attendee",
+          username: req.body.username,
+          email: req.body.email,
+          password: req.body.password, // Assuming the password is already hashed in the model
+          role: "attendee",
       });
 
       // Save the user to the database
       const user = await newUser.save();
-  
-      // Save the new user to the database
-  
+
       // Create a new attendee
       const newAttendee = new Attendee({
-        userId: user._id, // Reference the user
-        fullName: req.body.fullName,
-        dateOfBirth: req.body.dateOfBirth,
-        contactNumber: req.body.contactNumber,
+          userId: user._id, // Reference the user
+          fullName: req.body.fullName,
+          dateOfBirth: req.body.dateOfBirth,
+          contactNumber: req.body.contactNumber,
       });
-  
-      // // // Save the new attendee to the database
+
+      // Save the new attendee to the database
       await newAttendee.save();
-  
+
       return res.status(201).json({ message: 'Attendee registered successfully!' });
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Failed to register attendee.' });
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to register attendee.' });
     }
   },
 
