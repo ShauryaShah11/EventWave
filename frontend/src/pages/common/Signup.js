@@ -6,8 +6,8 @@ import { faFacebookF, faGithub, faTwitter } from "@fortawesome/free-brands-svg-i
 import { Col, Row, Form, Card, Button, FormCheck, Container, InputGroup } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { Routes as CustomRoutes } from "../../../routes";
-import BgImage from "../../../assets/img/illustrations/signin.svg";
+import { Routes as CustomRoutes } from "../../routes";
+import BgImage from "../../assets/img/illustrations/signin.svg";
 
 
 const Signup = () => {
@@ -16,7 +16,7 @@ const Signup = () => {
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
         <Container>
           <p className="text-center">
-            <Card.Link as={Link} to={CustomRoutes.DashboardOverview.path} className="text-gray-700">
+            <Card.Link as={Link} to={CustomRoutes.AdminDashboard.path} className="text-gray-700">
               <FontAwesomeIcon icon={faAngleLeft} className="me-2" /> Back to homepage
             </Card.Link>
           </p>

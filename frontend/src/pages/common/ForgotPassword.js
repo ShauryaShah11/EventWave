@@ -5,7 +5,7 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Form, Card, Button, Container, InputGroup } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Alert } from '@themesberg/react-bootstrap';
-import { Routes as CustomRoutes } from "../../../routes";
+import { Routes as CustomRoutes } from "../../routes";
 
 async function sendMail(email) {
   return fetch('http://localhost:8000/password-reset/forgot-password', {

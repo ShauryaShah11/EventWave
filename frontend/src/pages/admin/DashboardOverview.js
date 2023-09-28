@@ -17,10 +17,10 @@ import {
   ButtonGroup
 } from "@themesberg/react-bootstrap";
 
-import { CounterWidget } from "../../../components/common/Widgets";
-import { trafficShares } from "../../../data/charts";
+import { CounterWidget } from "../../components/common/Widgets";
+import { trafficShares } from "../../data/charts";
 import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
-import { Routes as CustomRoutes } from "../../../routes";
+import { Routes as CustomRoutes } from "../../routes";
 import { useNavigate } from "react-router-dom";
 
 const DashboardOverview = () => {

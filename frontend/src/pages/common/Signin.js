@@ -5,8 +5,8 @@ import { faFacebookF, faGithub, faTwitter } from "@fortawesome/free-brands-svg-i
 import { Col, Row, Form, Card, Button, FormCheck, Container, InputGroup } from '@themesberg/react-bootstrap';
 import { Link,useNavigate } from 'react-router-dom';
 
-import { Routes as CustomRoutes } from "../../../routes";
-import BgImage from "../../../assets/img/illustrations/signin.svg";
+import { Routes as CustomRoutes } from "../../routes";
+import BgImage from "../../assets/img/illustrations/signin.svg";
 import { Alert } from '@themesberg/react-bootstrap';
 import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
 

@@ -3,39 +3,22 @@ import { Route, Routes, useNavigate} from "react-router-dom";
 import { Routes as CustomRoutes } from "./routes";
 
 // pages
-import DashboardOverview from "./pages/admin/dashboard/DashboardOverview";
+import DashboardOverview from "./pages/admin/DashboardOverview";
 // import Transactions from "./Transactions";
 import Settings from "./Settings";
-import Signin from "./pages/admin/examples/Signin";
-import Signup from "./pages/admin/examples/Signup";
-import ForgotPassword from "./pages/admin/examples/ForgotPassword";
-import ResetPassword from "./pages/admin/examples/ResetPassword";
-import Lock from "./pages/admin/examples/Lock";
-import NotFoundPage from "./pages/admin/examples/NotFound";
-import ServerError from "./pages/admin/examples/ServerError";
+import Signin from "./pages/common/Signin";
+import Signup from "./pages/common/Signup";
+import ForgotPassword from "./pages/common/ForgotPassword";
+import ResetPassword from "./pages/common/ResetPassword";
+import Lock from "./pages/common/Lock";
+import NotFoundPage from "./pages/common/NotFound";
+import ServerError from "./pages/common/ServerError";
 
 // components
 import AdminSidebar from "./components/admin/Sidebar";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import Preloader from "./components/common/Preloader";
-
-import Accordion from "./components/admin/Accordion";
-import Alerts from "./components/admin/Alerts";
-import Badges from "./components/admin/Badges";
-import Breadcrumbs from "./components/admin/Breadcrumbs";
-import Buttons from "./components/admin/Buttons";
-import Forms from "./components/admin/Forms";
-import Modals from "./components/admin/Modals";
-import Navs from "./components/admin/Navs";
-import Navbars from "./components/admin/Navbars";
-import Pagination from "./components/admin/Pagination";
-import Popovers from "./components/admin/Popovers";
-import Progress from "./components/admin/Progress";
-import Tables from "./components/admin/Tables";
-import Tabs from "./components/admin/Tabs";
-import Tooltips from "./components/admin/Tooltips";
-import Toasts from "./components/admin/Toasts";
 
 import AttendeeList from "./components/admin/AttendeeList";
 import OrganizerList from "./components/admin/OrganizerList";
@@ -212,88 +195,6 @@ const HomePage =  () => (
       exact
       path={CustomRoutes.AddEvents.path}
       element={<RouteWithOrganizerSidebar component={AddEvent} />}
-    />
-
-    {/* Example Components Routes */}
-    <Route
-      exact
-      path={CustomRoutes.Accordions.path}
-      element={<RouteWithAdminSidebar component={Accordion} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Alerts.path}
-      element={<RouteWithAdminSidebar component={Alerts} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Badges.path}
-      element={<RouteWithAdminSidebar component={Badges} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Breadcrumbs.path}
-      element={<RouteWithAdminSidebar component={Breadcrumbs} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Buttons.path}
-      element={<RouteWithAdminSidebar component={Buttons} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Forms.path}
-      element={<RouteWithAdminSidebar component={Forms} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Modals.path}
-      element={<RouteWithAdminSidebar component={Modals} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Navs.path}
-      element={<RouteWithAdminSidebar component={Navs} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Navbars.path}
-      element={<RouteWithAdminSidebar component={Navbars} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Pagination.path}
-      element={<RouteWithAdminSidebar component={Pagination} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Popovers.path}
-      element={<RouteWithAdminSidebar component={Popovers} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Progress.path}
-      element={<RouteWithAdminSidebar component={Progress} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Tables.path}
-      element={<RouteWithAdminSidebar component={Tables} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Tabs.path}
-      element={<RouteWithAdminSidebar component={Tabs} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Tooltips.path}
-      element={<RouteWithAdminSidebar component={Tooltips} />}
-    />
-    <Route
-      exact
-      path={CustomRoutes.Toasts.path}
-      element={<RouteWithAdminSidebar component={Toasts} />}
     />
 
     <Route path="*" element={<NotFoundPage />} />

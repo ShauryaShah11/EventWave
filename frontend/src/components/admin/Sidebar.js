@@ -95,9 +95,8 @@ const Sidebar = (props = {}) => {
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
-              <NavItem title="Occasia" link={CustomRoutes.Presentation.path} image={ReactHero} />
+              <NavItem title="Occasia" link={CustomRoutes.AdminDashboard.path} image={ReactHero} />
 
-              <NavItem title="Overview" link={CustomRoutes.AdminDashboard.path} icon={faChartPie} />
               <NavItem title="Settings" icon={faCog} link={CustomRoutes.Settings.path} />
 
               <NavItem title="User List" icon={faUserFriends} link={CustomRoutes.AttendeeList.path} />
@@ -116,25 +115,6 @@ const Sidebar = (props = {}) => {
                 <NavItem title="500 Server Error" link={CustomRoutes.ServerError.path} />
               </CollapsableNavItem>
 
-              <CollapsableNavItem eventKey="components/" title="Components" icon={faBoxOpen}>
-                <NavItem title="Accordion" link={CustomRoutes.Accordions.path} />
-                <NavItem title="Alerts" link={CustomRoutes.Alerts.path} />
-                <NavItem title="Badges" link={CustomRoutes.Badges.path} />
-                <NavItem external title="Widgets" link="https://demo.themesberg.com/volt-pro-react/#/components/widgets" target="_blank" badgeText="Pro" />
-                <NavItem title="Breadcrumbs" link={CustomRoutes.Breadcrumbs.path} />
-                <NavItem title="Buttons" link={CustomRoutes.Buttons.path} />
-                <NavItem title="Forms" link={CustomRoutes.Forms.path} />
-                <NavItem title="Modals" link={CustomRoutes.Modals.path} />
-                <NavItem title="Navbars" link={CustomRoutes.Navbars.path} />
-                <NavItem title="Navs" link={CustomRoutes.Navs.path} />
-                <NavItem title="Pagination" link={CustomRoutes.Pagination.path} />
-                <NavItem title="Popovers" link={CustomRoutes.Popovers.path} />
-                <NavItem title="Progress" link={CustomRoutes.Progress.path} />
-                <NavItem title="Tables" link={CustomRoutes.Tables.path} />
-                <NavItem title="Tabs" link={CustomRoutes.Tabs.path} />
-                <NavItem title="Toasts" link={CustomRoutes.Toasts.path} />
-                <NavItem title="Tooltips" link={CustomRoutes.Tooltips.path} />
-              </CollapsableNavItem>
             </Nav>
           </div>
         </SimpleBar>

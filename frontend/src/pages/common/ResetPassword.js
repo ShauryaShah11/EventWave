@@ -5,7 +5,7 @@ import { faAngleLeft, faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-sv
 import { Col, Row, Form, Card, Button, Container, InputGroup } from '@themesberg/react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Alert } from '@themesberg/react-bootstrap';
-import { Routes as CustomRoutes } from "../../../routes";
+import { Routes as CustomRoutes } from "../../routes";
 
 
 const ResetPassword = () => {
