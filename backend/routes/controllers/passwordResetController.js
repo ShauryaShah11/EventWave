@@ -148,7 +148,6 @@ const passwordResetController = {
       const id = req.body.id;
       const token = req.body.token;
       const password = req.body.password;
-      const hashedPassword = await bcrypt.hash(password, 10);
   
       jwt.verify(token, process.env.JWT_SECRET, async (error, decoded) => {
         if (error) {
@@ -164,7 +163,7 @@ const passwordResetController = {
           }
   
           // Update the user's password
-          user.password = hashedPassword;
+          user.password = password;
           await user.save();
   
           return res.status(200).json({ message: 'Password reset successfully.' });

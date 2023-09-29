@@ -80,6 +80,8 @@ const Sidebar = (props = {}) => {
               <NavItem title="User List" icon={faUserFriends} link={CustomRoutes.AttendeeList.path} />
 
               <NavItem title="Add Event" icon={faUserFriends} link={CustomRoutes.AddEvents.path} />
+              <NavItem title="Event List" icon={faUserFriends} link={CustomRoutes.EventList.path} />
+
 
 
             </Nav>

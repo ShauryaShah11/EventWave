@@ -50,7 +50,7 @@ const AddEvent = () => {
         setErrorMessage(errorMessage);
         throw new Error("Network response was not ok");
       } else {
-        navigate(CustomRoutes.AttendeeList.path);
+        navigate(CustomRoutes.EventList.path);
       }
     } catch (error) {
       console.error("Error updating attendee:", error);

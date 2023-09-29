@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate} from "react-router-dom";
+import { Route, Routes} from "react-router-dom";
 import { Routes as CustomRoutes } from "./routes";
 
 // pages
@@ -29,10 +29,11 @@ import EditOrganizer from "./components/admin/EditOrganizer";
 import OrganizerSidebar from "./components/organizer/Sidabar";
 import OrganizerDashboard from "./pages/organizer/DashboardOverview";
 import AddEvent from "./components/organizer/AddEvent";
+import EventList from "./components/organizer/EventList";
+
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
-  const navigate = useNavigate();
   useEffect(() => {
     const timer = setTimeout(() => setLoaded(true), 1000);
     return () => clearTimeout(timer);
@@ -196,9 +197,14 @@ const HomePage =  () => (
       path={CustomRoutes.AddEvents.path}
       element={<RouteWithOrganizerSidebar component={AddEvent} />}
     />
+    <Route
+      exact
+      path={CustomRoutes.EventList.path}
+      element={<RouteWithOrganizerSidebar component={EventList} />}
+    />
+
 
     <Route path="*" element={<NotFoundPage />} />
-    {/* <Redirect to={CustomRoutes.NotFound.path} /> */}
   </Routes>
 );
 
