@@ -3,7 +3,7 @@ import SimpleBar from 'simplebar-react';
 import { useLocation } from "react-router-dom";
 import { CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook, faBoxOpen, faChartPie, faCog, faFileAlt, faHandHoldingUsd, faSignOutAlt, faTable, faTimes, faInbox, faSave, faUserFriends, faUserAlt, faUserCircle, faUserEdit, faUserGroup } from "@fortawesome/free-solid-svg-icons";
+import  * as SolidIcons  from "@fortawesome/free-solid-svg-icons";
 import { Nav, Badge, Image, Button, Dropdown, Accordion, Navbar } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -63,24 +63,20 @@ const Sidebar = (props = {}) => {
                 <div className="d-block">
                   <h6>Hi, Jane</h6>
                   <Button as={Link} variant="secondary" size="xs" to={CustomRoutes.Signin.path} className="text-dark">
-                    <FontAwesomeIcon icon={faSignOutAlt} className="me-2" /> Sign Out
+                    <FontAwesomeIcon icon={SolidIcons.faSignOutAlt} className="me-2" /> Sign Out
                   </Button>
                 </div>
               </div>
               <Nav.Link className="collapse-close d-md-none" onClick={onCollapse}>
-                <FontAwesomeIcon icon={faTimes} />
+                <FontAwesomeIcon icon={SolidIcons.faTimes} />
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
-              <NavItem title="Occasia" link={CustomRoutes.Presentation.path} image={ReactHero} />
+              <NavItem title="Occasia" link={CustomRoutes.OrganizerDashboard.path} image={ReactHero} />
 
-              <NavItem title="Overview" link={CustomRoutes.OrganizerDashboard.path} icon={faChartPie} />
-              <NavItem title="Settings" icon={faCog} link={CustomRoutes.Settings.path} />
 
-              <NavItem title="User List" icon={faUserFriends} link={CustomRoutes.AttendeeList.path} />
-
-              <NavItem title="Add Event" icon={faUserFriends} link={CustomRoutes.AddEvents.path} />
-              <NavItem title="Event List" icon={faUserFriends} link={CustomRoutes.EventList.path} />
+              <NavItem title="Add Event" icon={SolidIcons.faCalendarCheck } link={CustomRoutes.AddEvents.path} />
+              <NavItem title="Event List" icon={SolidIcons.faUserFriends} link={CustomRoutes.EventList.path} />
 
 
 

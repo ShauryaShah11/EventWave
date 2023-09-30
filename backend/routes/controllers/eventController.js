@@ -2,7 +2,7 @@ import Event from "../../models/Event.js"; // Import your Event model
 import Address from "../../models/Address.js";
 import EventAttendees from "../../models/EventAttendees.js";
 import PaymentTransactions from "../../models/PaymentTransactions.js";
-import { upload } from "../../config/multerConfig.js"; // Adjust the path as needed
+import { upload, deleteOldImages } from "../../config/multerConfig.js"; // Adjust the path as needed
 
 // Your event controller code here
 
@@ -11,9 +11,6 @@ const eventController = {
   postEvent: [
     upload.array("eventImages", 5),
     async (req, res) => {
-      console.log(req.body);
-      console.log(req.files);
-
       try {
         const {
           organizerId,
@@ -70,24 +67,78 @@ const eventController = {
   ],
 
   // Update event details by ID
-  updateEvent: async (req, res) => {
-    try {
-      const eventId = req.params.id;
-      const updatedData = req.body;
+  updateEvent: [
+    upload.array("eventImages", 5),
+    async (req, res) => {
+      try {
+        const eventId = req.params.id;
+        const { eventName, eventDescription, ticketPrice, eventDate } =
+          req.body;
+        const eventImages = req.files; // Assuming this is for updating event images
 
-      await Event.findByIdAndUpdate(eventId, updatedData);
-      return res.status(200).json({ message: "Event updated successfully!" });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: "Failed to update event." });
-    }
-  },
+        // Parse the address string into an object
+        const address = JSON.parse(req.body.address);
+
+        const addressId = address._id; // You've already extracted it
+
+        // Update the address using its ID
+        const updatedAddress = await Address.findByIdAndUpdate(
+          addressId,
+          address,
+        );
+
+        if (!updatedAddress) {
+          return res.status(500).json({ error: "Failed to update address" });
+        }
+        const oldEvent = await Event.findById(eventId);
+
+        let images;
+        if (eventImages && eventImages.length > 0) {
+          // Delete old images associated with the event (assuming you have a function for this)
+          await deleteOldImages(oldEvent.eventImages);
+
+          // Save the new images
+          images = req.files.map((file) => file.filename);
+
+        }
+        // Update the event data
+        const updatedEvent = await Event.findByIdAndUpdate(
+          eventId,
+          {
+            eventName,
+            eventDescription,
+            ticketPrice,
+            eventDate,
+            eventImages: images, // Assuming eventImages are updated here
+          },
+          { new: true }, // To return the updated event
+        );
+
+        if (!updatedEvent) {
+          return res.status(500).json({ error: "Failed to update event" });
+        }
+
+        return res
+          .status(200)
+          .json({ message: "Event updated successfully", updatedEvent });
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Failed to update event" });
+      }
+    },
+  ],
 
   // Delete an event by ID
   deleteEvent: async (req, res) => {
     try {
       const eventId = req.params.id;
+      const event = await Event.findById(eventId);
+      const addressId = event.eventAddress;
+      const address = await Address.findByIdAndDelete(addressId);
 
+      if(!address) {
+        return res.status(404).json({ error: "Address not Deleted." });
+      }
       await Event.findByIdAndDelete(eventId);
       return res.status(200).json({ message: "Event deleted successfully!" });
     } catch (error) {
@@ -107,26 +158,43 @@ const eventController = {
     }
   },
 
+  // Get event By Id
+  getEventById: async (req, res) => {
+    try {
+      const eventId = req.params.id;
+      const event = await Event.findById(eventId)
+        .populate("eventAddress", "street city state country zipCode")
+        .select("eventName eventDescription eventDate ticketPrice eventImages");
+
+      if (!event) {
+        return res.status(404).json({ error: "Event Not Found." });
+      }
+
+      return res.status(200).json(event);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Failed to Fech event" });
+    }
+  },
+
   getEventByOrganizerId: async (req, res) => {
     try {
-      console.log("hello")
       const organizerId = req.params.id;
-  
+
       const events = await Event.find({ organizerId })
-        .populate('eventAddress', 'street city state country zipCode')
-        .select('eventName eventDescription eventDate ticketPrice eventImages');
+        .populate("eventAddress", "street city state country zipCode")
+        .select("eventName eventDescription eventDate ticketPrice eventImages");
 
       if (!events) {
         return res.status(404).json({ error: "Event not found" });
       }
-  
+
       res.json(events);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: "Failed to fetch events." });
     }
   },
-  
 
   enrollUserInEvent: async (eventId, attendeeId) => {
     try {

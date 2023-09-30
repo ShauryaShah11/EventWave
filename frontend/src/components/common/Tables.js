@@ -248,21 +248,21 @@ export const OrganizerTable = ({
 
 export const EventTable = ({ events, onDeleteEvent, onEditEvent }) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [selectedOrganizerId, setselectedOrganizerId] = useState(null);
+  const [selectedEventId, setSelectedEventId] = useState(null);
 
-  const handleDeleteClick = (attendeeId) => {
-    setselectedOrganizerId(attendeeId);
+  const handleDeleteClick = (eventId) => {
+    setSelectedEventId(eventId);
     setShowConfirmationModal(true);
   };
 
   const handleConfirmDelete = () => {
-    onDeleteEvent(selectedOrganizerId);
+    onDeleteEvent(selectedEventId);
     setShowConfirmationModal(false);
-    setselectedOrganizerId(null); // Reset the selected attendee ID
+    setSelectedEventId(null); // Reset the selected attendee ID
   };
 
   const handleCancelDelete = () => {
-    setselectedOrganizerId(null);
+    setSelectedEventId(null);
     setShowConfirmationModal(false);
   };
   return (
@@ -288,7 +288,9 @@ export const EventTable = ({ events, onDeleteEvent, onEditEvent }) => {
                   <span className="fw-normal">{event.eventName}</span>
                 </td>
                 <td>
-                  <span className="fw-normal">{event.eventDate}</span>
+                  <span className="fw-normal">{new Date(event.eventDate).toLocaleDateString("en-IN",{
+                    year: "numeric", month:"long", day:"numeric", hour:"numeric",minute:"numeric"
+                  })}</span>
                 </td>
                 <td>
                   <span className="fw-normal">{event.eventDescription}</span>

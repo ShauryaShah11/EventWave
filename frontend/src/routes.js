@@ -24,6 +24,8 @@ export const Routes = {
     OrganizerDashboard: { path: "/organizer/dashboard" },
     AddEvents: { path: "/organizer/events/add" },
     EventList: { path: "/organizer/events" },
+    EditEvent : { path: "/organizer/edit-event"},
+
 
     
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { Button, ButtonGroup, Breadcrumb } from "@themesberg/react-bootstrap";
@@ -12,7 +12,7 @@ const EventList = () => {
   const organizerToken = localStorage.getItem("organizerToken");
   const decodedToken = jwt_decode(organizerToken);
   const navigate = useNavigate();
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await fetch(`http://localhost:8000/events/organizer/${decodedToken.userId}`, {
         method: "GET",
@@ -30,46 +30,45 @@ const EventList = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
+  },[decodedToken]);
 
   const deleteEvent = async (eventId) => {
-    console.log("deleting")
-    // try {
-    //   console.log("Deleting");
-    //   const response = await fetch(
-    //     `http://localhost:8000/users/${eventId}`,
-    //     {
-    //       method: "DELETE",
-    //       headers: {
-    //         "Content-Type": "application/json"
-    //       }
-    //     }
-    //   );
+    try {
+      console.log("Deleting");
+      const response = await fetch(
+        `http://localhost:8000/events/${eventId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
 
-    //   if (!response.ok) {
-    //     throw new Error("Network response was not ok");
-    //   }
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
 
-    //   // Assuming the response is a success message or data
-    //   const data = await response.json();
-    //   setEventData((prevUserData) =>
-    //     prevUserData.filter((event) => event._id !== eventId)
-    //   );
-    // } catch (error) {
-    //   console.error("Error fetching data:", error);
-    // }
+      // Assuming the response is a success message or data
+      const data = await response.json();
+      setEventData((prevUserData) =>
+        prevUserData.filter((event) => event._id !== eventId)
+      );
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const handleUpdateEvent = (eventId) => {
-    navigate(CustomRoutes.EditAttendee.path + `?id=${eventId}`);
+    navigate(CustomRoutes.EditEvent.path + `?id=${eventId}`);
   };
 
-  const handleDeleteEvent = (attendeeId) => {
-    deleteEvent(attendeeId);
+  const handleDeleteEvent = (eventId) => {
+    deleteEvent(eventId);
   };
 
   return (

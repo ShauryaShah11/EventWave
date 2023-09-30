@@ -30,6 +30,8 @@ import OrganizerSidebar from "./components/organizer/Sidabar";
 import OrganizerDashboard from "./pages/organizer/DashboardOverview";
 import AddEvent from "./components/organizer/AddEvent";
 import EventList from "./components/organizer/EventList";
+import EditEvent from "./components/organizer/EditEvent";
+
 
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
@@ -201,6 +203,11 @@ const HomePage =  () => (
       exact
       path={CustomRoutes.EventList.path}
       element={<RouteWithOrganizerSidebar component={EventList} />}
+    />
+    <Route
+      exact
+      path={CustomRoutes.EditEvent.path}
+      element={<RouteWithOrganizerSidebar component={EditEvent} />}
     />
 
 
