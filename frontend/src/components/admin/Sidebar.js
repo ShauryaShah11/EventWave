@@ -101,6 +101,7 @@ const Sidebar = (props = {}) => {
 
               <NavItem title="User List" icon={faUserFriends} link={CustomRoutes.AttendeeList.path} />
               <NavItem title="Organizer List" icon={faUserFriends} link={CustomRoutes.OrganizerList.path} />              
+              <NavItem title="Event List" icon={faUserFriends} link={CustomRoutes.AdminEventList.path} />              
 
 
               <Dropdown.Divider className="my-3 border-indigo" />

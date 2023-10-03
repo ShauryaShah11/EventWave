@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCashRegister,
@@ -24,6 +24,7 @@ import { Routes as CustomRoutes } from "../../routes";
 import { useNavigate } from "react-router-dom";
 
 const DashboardOverview = () => {
+  const [data, setData] = useState([]);
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -38,6 +39,25 @@ const DashboardOverview = () => {
       setUser(null);
     }
   };
+ 
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  },[]);
 
   useEffect(() => {
     // Check if the admin token is stored in localStorage
@@ -118,7 +138,7 @@ const DashboardOverview = () => {
 
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
-            category="Organizor"
+            category="Organizer"
             title="50"
             period="Feb 1 - Apr 1"
             icon={faUsers}
@@ -152,7 +172,7 @@ const DashboardOverview = () => {
 
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
-            category="Organizor"
+            category="Organizer"
             title="50"
             period="Feb 1 - Apr 1"
             icon={faUsers}
@@ -186,7 +206,7 @@ const DashboardOverview = () => {
 
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
-            category="Organizor"
+            category="Organizer"
             title="50"
             period="Feb 1 - Apr 1"
             icon={faUsers}

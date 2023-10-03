@@ -24,6 +24,7 @@ import AttendeeList from "./components/admin/AttendeeList";
 import OrganizerList from "./components/admin/OrganizerList";
 import EditAttendee from "./components/admin/EditAttendee";
 import EditOrganizer from "./components/admin/EditOrganizer";
+import AdminEventList  from './components/admin/EventList';
 
 // Organizer import
 import OrganizerSidebar from "./components/organizer/Sidabar";
@@ -32,8 +33,11 @@ import AddEvent from "./components/organizer/AddEvent";
 import EventList from "./components/organizer/EventList";
 import EditEvent from "./components/organizer/EditEvent";
 
-
-
+// Users import
+import NavBar from './components/users/navbar';
+import Home from './pages/users/Home';
+import Events from './pages/users/Events';
+import UserFooter from './components/users/Footer';
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
@@ -114,6 +118,39 @@ const RouteWithOrganizerSidebar = ({ component: Component, ...rest }) => {
   );
 };
 
+const RouteWithNavBar = ({ component: Component, ...rest }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoaded(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const localStorageIsSettingsVisible = () => {
+    return localStorage.getItem('settingsVisible') === 'false' ? false : true;
+  };
+
+  const [showSettings, setShowSettings] = useState(localStorageIsSettingsVisible);
+
+  const toggleSettings = () => {
+    setShowSettings(!showSettings);
+    localStorage.setItem('settingsVisible', !showSettings);
+  };
+
+  return (
+      <>
+      <Preloader show={loaded ? false : true} />
+        <NavBar />
+        <div className="mx-0" style={{backgroundColor: "#f5f5f5"}}>
+          <main>
+            <Component {...rest} />
+            <UserFooter />
+          </main>
+        </div>
+      </>
+  );
+};
+
 const HomePage =  () => (
   <Routes>
     <Route
@@ -159,11 +196,6 @@ const HomePage =  () => (
     />
     <Route
       exact
-      path={CustomRoutes.Presentation.path}
-      element={<RouteWithAdminSidebar component={DashboardOverview} />}
-    />
-    <Route
-      exact
       path={CustomRoutes.Settings.path}
       element={<RouteWithAdminSidebar component={Settings} />}
     />
@@ -187,7 +219,16 @@ const HomePage =  () => (
       path={CustomRoutes.EditOrganizer.path}
       element={<RouteWithAdminSidebar component={EditOrganizer} />}
     />
-
+    <Route
+      exact
+      path={CustomRoutes.AdminEventList.path}
+      element={<RouteWithAdminSidebar component={AdminEventList} />}
+    />
+    <Route
+      exact
+      path={CustomRoutes.AdminEditEvent.path}
+      element={<RouteWithAdminSidebar component={EditEvent} />}
+    />
     {/* Organizer Routes */}
     <Route
       exact
@@ -208,6 +249,18 @@ const HomePage =  () => (
       exact
       path={CustomRoutes.EditEvent.path}
       element={<RouteWithOrganizerSidebar component={EditEvent} />}
+    />
+
+    {/* Users Routes */}
+    <Route
+      exact
+      path={CustomRoutes.Home.path}
+      element={<RouteWithNavBar component={Home} />}
+    />
+    <Route
+      exact
+      path={CustomRoutes.Events.path}
+      element={<RouteWithNavBar component={Events} />}
     />
 
 

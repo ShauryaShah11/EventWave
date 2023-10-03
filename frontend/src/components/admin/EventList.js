@@ -9,10 +9,12 @@ import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
 
 const EventList = () => {
   const [eventData, setEventData] = useState([]);
+  const organizerToken = localStorage.getItem("organizerToken");
+  const decodedToken = jwt_decode(organizerToken);
   const navigate = useNavigate();
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8000/events/`, {
+      const response = await fetch(`http://localhost:8000/events/organizer/${decodedToken.userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
@@ -28,7 +30,7 @@ const EventList = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  },[eventData]);
+  },[decodedToken]);
 
   const deleteEvent = async (eventId) => {
     try {
@@ -62,7 +64,7 @@ const EventList = () => {
   }, [fetchData]);
 
   const handleUpdateEvent = (eventId) => {
-    navigate(CustomRoutes.EditEvent.path + `?id=${eventId}`);
+    navigate(CustomRoutes.AdminEditEvent.path + `?id=${eventId}`);
   };
 
   const handleDeleteEvent = (eventId) => {

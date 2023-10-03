@@ -1,12 +1,14 @@
 
 export const Routes = {
     // pages
-    Presentation: { path: "/" },
+    Home: { path: "/" },
     AdminDashboard: { path: "/admin/dashboard" },
     AttendeeList: { path: "/admin/attendees" },
     EditAttendee : { path: "/admin/edit-attendee"},
     EditOrganizer : { path: "/admin/edit-organizer"},
     OrganizerList: { path: "/admin/orgaizers" },
+    AdminEventList: { path: "/admin/events" },
+    AdminEditEvent : { path: "/admin/edit-event"},
     Billing: { path: "/examples/billing" },
     Invoice: { path: "/examples/invoice" },
     Signin: { path: "/examples/sign-in" },
@@ -30,22 +32,5 @@ export const Routes = {
     
 
     // components
-    Accordions: { path: "/components/accordions" },
-    Alerts: { path: "/components/alerts" },
-    Badges: { path: "/components/badges" },
-    Widgets: { path: "/widgets" },
-    Breadcrumbs: { path: "/components/breadcrumbs" },
-    Buttons: { path: "/components/buttons" },
-    Forms: { path: "/components/forms" },
-    Modals: { path: "/components/modals" },
-    Navs: { path: "/components/navs" },
-    Navbars: { path: "/components/navbars" },
-    Pagination: { path: "/components/pagination" },
-    Popovers: { path: "/components/popovers" },
-    Progress: { path: "/components/progress" },
-    Tables: { path: "/components/tables" },
-    Tabs: { path: "/components/tabs" },
-    Tooltips: { path: "/components/tooltips" },
-    Toasts: { path: "/components/toasts" },
-    WidgetsComponent: { path: "/components/widgets" }
+    Events: { path: "/events" },
 };

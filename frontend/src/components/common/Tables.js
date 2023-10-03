@@ -289,7 +289,7 @@ export const EventTable = ({ events, onDeleteEvent, onEditEvent }) => {
                 </td>
                 <td>
                   <span className="fw-normal">{new Date(event.eventDate).toLocaleDateString("en-IN",{
-                    year: "numeric", month:"long", day:"numeric", hour:"numeric",minute:"numeric"
+                    year: "numeric", month:"short", day:"numeric", hour:"numeric",minute:"numeric"
                   })}</span>
                 </td>
                 <td>

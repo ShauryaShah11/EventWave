@@ -72,8 +72,7 @@ const eventController = {
     async (req, res) => {
       try {
         const eventId = req.params.id;
-        const { eventName, eventDescription, ticketPrice, eventDate } =
-          req.body;
+        const { eventName, eventDescription, ticketPrice, eventDate } = req.body;
         const eventImages = req.files; // Assuming this is for updating event images
 
         // Parse the address string into an object
