@@ -2,6 +2,8 @@
 export const Routes = {
     // pages
     Home: { path: "/" },
+
+    // admin paths
     AdminDashboard: { path: "/admin/dashboard" },
     AttendeeList: { path: "/admin/attendees" },
     EditAttendee : { path: "/admin/edit-attendee"},
@@ -9,28 +11,26 @@ export const Routes = {
     OrganizerList: { path: "/admin/orgaizers" },
     AdminEventList: { path: "/admin/events" },
     AdminEditEvent : { path: "/admin/edit-event"},
-    Billing: { path: "/examples/billing" },
-    Invoice: { path: "/examples/invoice" },
-    Signin: { path: "/examples/sign-in" },
-    Signup: { path: "/examples/sign-up" },
-    ForgotPassword: { path: "/examples/forgot-password" },
-    ResetPassword: { path: "/reset-password" },
-    Lock: { path: "/examples/lock" },
-    NotFound: { path: "/examples/404" },
-    ServerError: { path: "/examples/500" },
-    Transactions: { path: "/transactions" },
-    Settings: { path: "/settings" },
-    Upgrade: { path: "/upgrade" },
 
-    // organizer
+    // common paths
+    Billing: { path: "/billing" },
+    Invoice: { path: "/invoice" },
+    Signin: { path: "/sign-in" },
+    Signup: { path: "/sign-up" },
+    ForgotPassword: { path: "/forgot-password" },
+    ResetPassword: { path: "/reset-password" },
+    Lock: { path: "/lock" },
+    NotFound: { path: "/404" },
+    ServerError: { path: "/500" },
+
+    // organizer paths
     OrganizerDashboard: { path: "/organizer/dashboard" },
     AddEvents: { path: "/organizer/events/add" },
     EventList: { path: "/organizer/events" },
-    EditEvent : { path: "/organizer/edit-event"},
+    EditEvent : { path: "/organizer/edit-event"},    
 
-
-    
-
-    // components
+    // user paths
     Events: { path: "/events" },
+    EventDetails: { path: "/events-details" },
+
 };

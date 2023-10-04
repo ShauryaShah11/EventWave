@@ -96,9 +96,6 @@ const Sidebar = (props = {}) => {
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
               <NavItem title="Occasia" link={CustomRoutes.AdminDashboard.path} image={ReactHero} />
-
-              <NavItem title="Settings" icon={faCog} link={CustomRoutes.Settings.path} />
-
               <NavItem title="User List" icon={faUserFriends} link={CustomRoutes.AttendeeList.path} />
               <NavItem title="Organizer List" icon={faUserFriends} link={CustomRoutes.OrganizerList.path} />              
               <NavItem title="Event List" icon={faUserFriends} link={CustomRoutes.AdminEventList.path} />              

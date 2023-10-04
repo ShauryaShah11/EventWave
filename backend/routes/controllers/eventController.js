@@ -149,7 +149,9 @@ const eventController = {
   // Get all events
   getAllEvents: async (req, res) => {
     try {
-      const events = await Event.find().populate("organizerId");
+      const events = await Event.find().populate("organizerId")
+        .populate("eventAddress", "street city state country zipCode")
+        .select("eventName eventDescription eventDate ticketPrice eventImages");
       return res.status(200).json(events);
     } catch (error) {
       console.error(error);

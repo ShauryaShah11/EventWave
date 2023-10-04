@@ -1,32 +1,22 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookF, faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { Col, Row, Form, Card, Button, FormCheck, Container, InputGroup } from '@themesberg/react-bootstrap';
-import { Link,useNavigate } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
 import { Routes as CustomRoutes } from "../../routes";
 import BgImage from "../../assets/img/illustrations/signin.svg";
 import { Alert } from '@themesberg/react-bootstrap';
-import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
 
-async function loginUser(credentials) {
-  return fetch('http://localhost:8000/users/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(credentials)
-  })
-    .then(data => data.json())
-}
+import { useAuth } from '../../hooks/useAuth'; // Import the useAuth hook
 
 const Signin = () => {
-  
-  const [email,setEmail] = useState('');
-  const [password,setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { login } = useAuth(); // Use the login function from the useAuth hook
+
   const handleEmail = (event) => {
     setEmail(event.target.value);
   };
@@ -34,32 +24,24 @@ const Signin = () => {
   const handlePassword = (event) => {
     setPassword(event.target.value);
   }
+
   const handleLogin = async (event) => {
     event.preventDefault();
-  
+
     try {
-      const response = await loginUser({
-        email,
-        password
-      });
-  
-      if (response.token) {
-        const decodedToken = jwt_decode(response.token);
-  
-        if (decodedToken.role === "admin") {
-          localStorage.setItem("adminToken", response.token);
+      // Call the login function from the useAuth hook
+      const loggedIn = await login(email, password);
+
+      if (loggedIn) {
+        // The user has been authenticated, you can redirect based on their role
+        const userRole = localStorage.getItem('userRole');
+        if (userRole === 'admin') {
           navigate(CustomRoutes.AdminDashboard.path);
-
-        } else if (decodedToken.role === "user") {
-          localStorage.setItem("userToken", response.token);
-
-        } else if (decodedToken.role === "organizer") {
-          localStorage.setItem("organizerToken", response.token);
-          navigate(CustomRoutes.OrganizerDashboard.path);
+        } else if (userRole === 'user') {
+          // Redirect to the user dashboard or any other appropriate route
+        } else if (userRole === 'organizer') {
+          // Redirect to the organizer dashboard or any other appropriate route
         }
-  
-        console.log("Login successful");
-        setError(null);
       } else {
         setError("Incorrect email or password. Please try again.");
       }
@@ -67,8 +49,7 @@ const Signin = () => {
       console.error('Error during login:', error);
       setError('An error occurred. Please try again later.');
     }
-  
-  };  
+  };
   
   return (
     <main>

@@ -2,42 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { Route, Routes} from "react-router-dom";
 import { Routes as CustomRoutes } from "./routes";
 
-// pages
-import DashboardOverview from "./pages/admin/DashboardOverview";
-// import Transactions from "./Transactions";
-import Settings from "./Settings";
-import Signin from "./pages/common/Signin";
-import Signup from "./pages/common/Signup";
-import ForgotPassword from "./pages/common/ForgotPassword";
-import ResetPassword from "./pages/common/ResetPassword";
-import Lock from "./pages/common/Lock";
-import NotFoundPage from "./pages/common/NotFound";
-import ServerError from "./pages/common/ServerError";
-
-// components
+// Admin components
+import DashboardOverview from "./components/admin/DashboardOverview";
 import AdminSidebar from "./components/admin/Sidebar";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import Preloader from "./components/common/Preloader";
-
 import AttendeeList from "./components/admin/AttendeeList";
 import OrganizerList from "./components/admin/OrganizerList";
 import EditAttendee from "./components/admin/EditAttendee";
 import EditOrganizer from "./components/admin/EditOrganizer";
 import AdminEventList  from './components/admin/EventList';
 
-// Organizer import
+// common components
+import Signin from "./components/common/Signin";
+import Signup from "./components/common/Signup";
+import ForgotPassword from "./components/common/ForgotPassword";
+import ResetPassword from "./components/common/ResetPassword";
+import Lock from "./components/common/Lock";
+import NotFoundPage from "./components/common/NotFound";
+import ServerError from "./components/common/ServerError";
+
+// Organizer Components
 import OrganizerSidebar from "./components/organizer/Sidabar";
-import OrganizerDashboard from "./pages/organizer/DashboardOverview";
+import OrganizerDashboard from "./components/organizer/DashboardOverview";
 import AddEvent from "./components/organizer/AddEvent";
 import EventList from "./components/organizer/EventList";
 import EditEvent from "./components/organizer/EditEvent";
 
-// Users import
+// Users Components
 import NavBar from './components/users/navbar';
-import Home from './pages/users/Home';
-import Events from './pages/users/Events';
+import Home from './components/users/Home';
+import Events from './components/users/Events';
+import EventDetails from './components/users/EventDetails';
 import UserFooter from './components/users/Footer';
+
+
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
@@ -196,11 +196,6 @@ const HomePage =  () => (
     />
     <Route
       exact
-      path={CustomRoutes.Settings.path}
-      element={<RouteWithAdminSidebar component={Settings} />}
-    />
-    <Route
-      exact
       path={CustomRoutes.AttendeeList.path}
       element={<RouteWithAdminSidebar component={AttendeeList} />}
     />
@@ -261,6 +256,11 @@ const HomePage =  () => (
       exact
       path={CustomRoutes.Events.path}
       element={<RouteWithNavBar component={Events} />}
+    />
+    <Route
+      exact
+      path={CustomRoutes.EventDetails.path}
+      element={<RouteWithNavBar component={EventDetails} />}
     />
 
 
