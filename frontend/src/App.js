@@ -2,40 +2,40 @@ import React, { useState, useEffect } from 'react';
 import { Route, Routes} from "react-router-dom";
 import { Routes as CustomRoutes } from "./routes";
 
-// Admin components
-import DashboardOverview from "./components/admin/DashboardOverview";
+// Admin Components
+import DashboardOverview from "./pages/admin/Dashboard";
 import AdminSidebar from "./components/admin/Sidebar";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import Preloader from "./components/common/Preloader";
-import AttendeeList from "./components/admin/AttendeeList";
-import OrganizerList from "./components/admin/OrganizerList";
-import EditAttendee from "./components/admin/EditAttendee";
-import EditOrganizer from "./components/admin/EditOrganizer";
-import AdminEventList  from './components/admin/EventList';
+import AttendeeList from "./pages/admin/AttendeeList";
+import OrganizerList from "./pages/admin/OrganizerList";
+import EditAttendee from "./pages/admin/EditAttendee";
+import EditOrganizer from "./pages/admin/EditOrganizer";
+import AdminEventList  from './pages/admin/EventList';
 
 // common components
-import Signin from "./components/common/Signin";
-import Signup from "./components/common/Signup";
-import ForgotPassword from "./components/common/ForgotPassword";
-import ResetPassword from "./components/common/ResetPassword";
-import Lock from "./components/common/Lock";
-import NotFoundPage from "./components/common/NotFound";
-import ServerError from "./components/common/ServerError";
+import Signin from "./pages/common/Signin";
+import Signup from "./pages/common/Signup";
+import ForgotPassword from "./pages/common/ForgotPassword";
+import ResetPassword from "./pages/common/ResetPassword";
+import Lock from "./pages/common/Lock";
+import NotFoundPage from "./pages/common/NotFound";
+import ServerError from "./pages/common/ServerError";
 
 // Organizer Components
 import OrganizerSidebar from "./components/organizer/Sidabar";
-import OrganizerDashboard from "./components/organizer/DashboardOverview";
-import AddEvent from "./components/organizer/AddEvent";
-import EventList from "./components/organizer/EventList";
-import EditEvent from "./components/organizer/EditEvent";
+import OrganizerDashboard from "./pages/organizer/Dashboard";
+import AddEvent from "./pages/organizer/AddEvent";
+import EventList from "./pages/organizer/EventList";
+import EditEvent from "./pages/organizer/EditEvent";
 
 // Users Components
-import NavBar from './components/users/navbar';
-import Home from './components/users/Home';
-import Events from './components/users/Events';
-import EventDetails from './components/users/EventDetails';
-import UserFooter from './components/users/Footer';
+import NavBar from './components/user/navbar';
+import Home from './pages/user/Home';
+import Events from './pages/user/Events';
+import EventDetails from './components/user/EventDetails';
+import UserFooter from './components/user/Footer';
 
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {

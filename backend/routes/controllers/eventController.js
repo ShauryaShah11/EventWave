@@ -163,7 +163,7 @@ const eventController = {
   getEventById: async (req, res) => {
     try {
       const eventId = req.params.id;
-      const event = await Event.findById(eventId)
+      const event = await Event.findById(eventId).populate("organizerId")
         .populate("eventAddress", "street city state country zipCode")
         .select("eventName eventDescription eventDate ticketPrice eventImages");
 
@@ -182,7 +182,7 @@ const eventController = {
     try {
       const organizerId = req.params.id;
 
-      const events = await Event.find({ organizerId })
+      const events = await Event.find({ organizerId }).populate("organizerId")
         .populate("eventAddress", "street city state country zipCode")
         .select("eventName eventDescription eventDate ticketPrice eventImages");
 

@@ -4,13 +4,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faCog, faEnvelopeOpen, faSearch, faSignOutAlt, faUserShield } from "@fortawesome/free-solid-svg-icons";
 import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
 import { Row, Col, Nav, Form, Image, Navbar, Dropdown, Container, ListGroup, InputGroup } from '@themesberg/react-bootstrap';
-
+import { Link, useNavigate } from "react-router-dom";
 import NOTIFICATIONS_DATA from "../../data/notifications";
 import Profile3 from "../../assets/img/team/profile-picture-3.jpg";
+import {Routes as CustomRoutes} from "../../routes";
 
 
 const NavBar = (props) => {
   const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA);
+  const navigate = useNavigate();
   const areNotificationsRead = notifications.reduce((acc, notif) => acc && notif.read, true);
 
   const markNotificationsAsRead = () => {
@@ -19,6 +21,14 @@ const NavBar = (props) => {
     }, 300);
   };
 
+  function handleLogout(){
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("organizerToken");
+
+
+    // Redirect to the login page or any other appropriate route
+    navigate(CustomRoutes.Signin.path); // Change the route as needed
+  }
 
   const Notification = (props) => {
     const { link, sender, image, time, message, read = false } = props;
@@ -66,7 +76,7 @@ const NavBar = (props) => {
                 <div className="media d-flex align-items-center">
                   <Image src={Profile3} className="user-avatar md-avatar rounded-circle" />
                   <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
-                    <span className="mb-0 font-small fw-bold">Bonnie Green</span>
+                    <span className="mb-0 font-small fw-bold">Shaurya</span>
                   </div>
                 </div>
               </Dropdown.Toggle>
@@ -79,7 +89,7 @@ const NavBar = (props) => {
                 </Dropdown.Item>
                 <Dropdown.Divider />
 
-                <Dropdown.Item className="fw-bold">
+                <Dropdown.Item className="fw-bold" onClick={handleLogout}>
                   <FontAwesomeIcon icon={faSignOutAlt} className="text-danger me-2" /> Logout
                 </Dropdown.Item>
               </Dropdown.Menu>

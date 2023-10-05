@@ -103,16 +103,6 @@ const Sidebar = (props = {}) => {
 
               <Dropdown.Divider className="my-3 border-indigo" />
 
-              <CollapsableNavItem eventKey="examples/" title="Page Examples" icon={faFileAlt} className="custom-collapsable">
-                <NavItem title="Sign In" link={CustomRoutes.Signin.path} />
-                <NavItem title="Sign Up" link={CustomRoutes.Signup.path} />
-                <NavItem title="Forgot password" link={CustomRoutes.ForgotPassword.path} />
-                <NavItem title="Reset password" link={CustomRoutes.ResetPassword.path} />
-                <NavItem title="Lock" link={CustomRoutes.Lock.path} />
-                <NavItem title="404 Not Found" link={CustomRoutes.NotFound.path} />
-                <NavItem title="500 Server Error" link={CustomRoutes.ServerError.path} />
-              </CollapsableNavItem>
-
             </Nav>
           </div>
         </SimpleBar>

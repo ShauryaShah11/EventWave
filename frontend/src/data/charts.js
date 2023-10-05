@@ -1,4 +1,3 @@
-
 import { faDesktop, faMobileAlt, faTabletAlt } from '@fortawesome/free-solid-svg-icons';
 
 const trafficShares = [
