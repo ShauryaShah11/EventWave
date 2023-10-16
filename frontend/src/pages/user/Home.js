@@ -15,16 +15,18 @@ function Home() {
     <div>
       {/* Hero Section */}
       <header
-        className="hero text-black text-center py-5"
-        style={{ backgroundColor: "#ffffff" }}
+        className="hero text-white text-center py-10"
+        style={{
+          background: "url('https://images.pexels.com/photos/2952834/pexels-photo-2952834.jpeg?auto=compress&cs=tinysrgb&w=600') center/cover no-repeat",
+        }}
       >
         <Carousel controls={false} indicators={false} interval={3000}>
           <Carousel.Item>
             <Container>
               <h1 className="display-3 mt-5">Welcome to Occasia Event Management</h1>
               <p className="lead mt-3">Plan, organize, and manage your events with ease.</p>
-              <Link to={CustomRoutes.Events.path} className="btn btn-light btn-lg mt-4">
-                Explore Event
+              <Link to={CustomRoutes.Events.path} className="btn btn-primary btn-lg mt-4">
+                Explore Events
               </Link>
             </Container>
           </Carousel.Item>

@@ -14,7 +14,7 @@ const EditAttendee = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const attendeeId = searchParams.get("id");
-
+  const token = localStorage.getItem("admiinToken");
   const fetchData = async () => {
     try {
       const response = await fetch(
@@ -22,7 +22,8 @@ const EditAttendee = () => {
         {
           method: "GET",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // Include the token in the request headers
           }
         }
       );
@@ -44,7 +45,8 @@ const EditAttendee = () => {
         {
           method: "PUT", // Use 'PUT' method to update the attendee
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // Include the token in the request headers
           },
           body: JSON.stringify(attendeeData)
         }

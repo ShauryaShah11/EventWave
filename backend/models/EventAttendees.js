@@ -16,6 +16,10 @@ const eventAttendeesSchema = new mongoose.Schema({
         enum: ['attending', 'not_attending', 'pending'],
         required: true,
     },
+    paymentId: {
+        type: Schema.Types.ObjectId,
+        ref: 'PaymentTransactions', // Reference the 'PaymentTransactions' model
+    },
 });
 
 const EventAttendees = mongoose.model('EventAttendees', eventAttendeesSchema);

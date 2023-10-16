@@ -7,6 +7,7 @@ import { Routes as CustomRoutes } from "../../routes";
 const EditEvent = () => {
   const [eventData, setEventData] = useState();
   const [errorMessage, setErrorMessage] = useState(null);
+  const token = localStorage.getItem('organizerToken');
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,7 +21,9 @@ const EditEvent = () => {
         {
           method: "GET",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+            
           }
         }
       );
@@ -58,6 +61,10 @@ const EditEvent = () => {
         {
           method: "PUT", // Use 'PUT' method to update the event
           body: formData, // Use the FormData object as the body
+          headers: {
+            // Include the token in the "Authorization" header
+            "Authorization": `Bearer ${token}`,
+        },
         }
       );
   

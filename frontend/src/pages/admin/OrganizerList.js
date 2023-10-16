@@ -10,13 +10,15 @@ const OrganizerList = () => {
   const [organizerData, setOrganizerData] = useState([]);
   const navigate = useNavigate();
 
-
+  const token = localStorage.getItem('adminToken')
   const fetchData = async () => {
     try {
       const response = await fetch("http://localhost:8000/organizer/", {
         method: "GET",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // Include the token in the request headers
+
         }
       });
 
@@ -39,7 +41,8 @@ const OrganizerList = () => {
         {
           method: "DELETE",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // Include the token in the request headers
           }
         }
       );

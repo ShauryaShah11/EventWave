@@ -197,33 +197,73 @@ const eventController = {
     }
   },
 
-  enrollUserInEvent: async (eventId, attendeeId) => {
+  enrollUserInEvent: async (req, res) => {
     try {
+      const eventId = req.body.eventId;
+      const attendeeId = req.body.userId;
+  
       // Check if the payment transaction is completed
       const payment = await PaymentTransactions.findOne({
         eventId: eventId,
         paymentStatus: "completed",
       });
-
+  
       if (!payment) {
-        throw new Error("Payment not completed.");
+        return res.status(400).json({ success: false, message: "Payment not completed." });
       }
-
+  
       // Create an enrollment record
       const enrollment = new EventAttendees({
         eventId: eventId,
         attendeeId: attendeeId,
         attendanceStatus: "attending",
+        paymentId: payment._id
       });
-
+  
       await enrollment.save();
-
-      return "Enrollment successful!";
+  
+      return res.json({ success: true, message: "Enrollment successful!" });
     } catch (error) {
       console.error(error);
-      throw new Error("Failed to enroll user.");
+      return res.status(500).json({ success: false, message: "Failed to enroll user." });
     }
   },
+
+  getEventsAttendedByUser: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+  
+      const attendedEvents = await EventAttendees.find({ attendeeId: userId })
+        .populate({ path: 'eventId' });
+
+        const eventsWithPaymentStatus = await Promise.all(
+          attendedEvents.map(async (attendance) => {
+            const event = attendance.eventId;
+            const paymentId = attendance.paymentId;
+            const payment = await PaymentTransactions.findOne({ _id: paymentId });
+
+            return {
+              _id: event._id,
+              eventName: event.eventName,
+              eventDescription: event.eventDescription,
+              eventDate: event.eventDate,
+              ticketPrice: event.ticketPrice,
+              eventImages: event.eventImages,
+              eventAddress: event.eventAddress,
+              paymentStatus: payment ? payment.paymentStatus : 'Not paid',
+            };
+          })
+        );
+        
+
+      return res.json(eventsWithPaymentStatus);
+
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Failed to retrieve events attended by the user' });
+    }
+  }
+  
 
   // Add more controller methods as needed
 };

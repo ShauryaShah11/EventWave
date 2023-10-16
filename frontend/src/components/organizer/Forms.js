@@ -169,13 +169,7 @@ export const AddEventForm = ({ onSave, errorMessage }) => {
                           </button>
                         </div>
                         <div className="file-preview">
-                          {file.type.startsWith("image/") && (
-                            <img
-                              src={URL.createObjectURL(file)}
-                              alt={file.name}
-                              className="img-thumbnail mt-2"
-                            />
-                          )}
+
                           {!file.type.startsWith("image/") && (
                             <span className="file-type">
                               File type: {file.type}

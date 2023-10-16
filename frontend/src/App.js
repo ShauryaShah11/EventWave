@@ -36,7 +36,7 @@ import Home from './pages/user/Home';
 import Events from './pages/user/Events';
 import EventDetails from './components/user/EventDetails';
 import UserFooter from './components/user/Footer';
-
+import EventAttendeeList from "./pages/user/UserEvent";
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -262,7 +262,11 @@ const HomePage =  () => (
       path={CustomRoutes.EventDetails.path}
       element={<RouteWithNavBar component={EventDetails} />}
     />
-
+    <Route
+      exact
+      path={CustomRoutes.EventAttendee.path}
+      element={<RouteWithNavBar component={EventAttendeeList} />}
+    />
 
     <Route path="*" element={<NotFoundPage />} />
   </Routes>

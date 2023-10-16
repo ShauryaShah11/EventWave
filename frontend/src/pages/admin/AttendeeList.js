@@ -10,12 +10,14 @@ const AttendeeList = () => {
   const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
 
+  const token = localStorage.getItem('adminToken');
   const fetchData = async () => {
     try {
       const response = await fetch("http://localhost:8000/users/", {
         method: "GET",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // Include the token in the request headers
         }
       });
 
@@ -38,7 +40,8 @@ const AttendeeList = () => {
         {
           method: "DELETE",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,// Include the token in the request headers
           }
         }
       );

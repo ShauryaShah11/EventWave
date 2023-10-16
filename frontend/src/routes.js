@@ -32,5 +32,6 @@ export const Routes = {
     // user paths
     Events: { path: "/events" },
     EventDetails: { path: "/events-details" },
+    EventAttendee: { path: "/my-events"} 
 
 };

@@ -9,7 +9,6 @@ const organizerController = {
     // Create a new organizer
     async register(req, res) {
       try {
-        console.log(req.body);
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
     

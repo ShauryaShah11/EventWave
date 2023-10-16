@@ -12,9 +12,6 @@ import {
 import {
   Col,
   Row,
-  Button,
-  Dropdown,
-  ButtonGroup
 } from "@themesberg/react-bootstrap";
 
 import { CounterWidget } from "../../components/common/Widgets";
@@ -25,27 +22,17 @@ import { useNavigate } from "react-router-dom";
 
 const DashboardOverview = () => {
   const [data, setData] = useState([]);
-  const [token, setToken] = useState(null);
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const token = localStorage.getItem("adminToken");
 
-  // Function to decode the token and set user state
-  const decodeToken = (token) => {
-    if (token) {
-      const decoded = jwt_decode(token);
-      setUser(decoded);
-      console.log(user);
-    } else {
-      setUser(null);
-    }
-  };
  
   const fetchData = useCallback(async () => {
     try {
       const response = await fetch(`http://localhost:8000/`, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // Include the token in the request headers
         }
       });
 
@@ -61,18 +48,11 @@ const DashboardOverview = () => {
 
   useEffect(() => {
     // Check if the admin token is stored in localStorage
-    const adminToken = localStorage.getItem("adminToken");
   
     // If the admin token is not present, redirect to the sign-in page
-    if (!adminToken) {
+    if (!token) {
       navigate(CustomRoutes.Signin.path); // Redirect to the sign-in page
-    } else {
-      // Decode the stored token and set user state
-      decodeToken(adminToken);
-  
-      // Set the token in the state
-      setToken(adminToken);
-    }
+    } 
   }, []);
   
   return (

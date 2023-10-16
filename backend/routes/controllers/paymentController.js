@@ -1,40 +1,31 @@
-import jwt from 'jsonwebtoken'; // Import the jsonwebtoken library
 import eventController  from './eventController.js'; // Import the appropriate path
-
+import PaymentTransactions from '../../models/PaymentTransactions.js';
 // paymentController.js
 const paymentController = {
   createPaymentTransaction: async (req, res) => {
     try {
-      const { ticketId, amount, paymentStatus } = req.body;
-
-      // Check if the payment is completed
-      if (paymentStatus !== 'completed') {
-        return res.status(400).json({ error: 'Payment is not completed.' });
-      }
-
-      // Find the ticket
-      const ticket = await Tickets.findById(ticketId);
-      if (!ticket) {
-        return res.status(404).json({ error: 'Ticket not found.' });
-      }
-
-      // Create a new payment transaction
-      const newPayment = new PaymentTransactions({
-        ticketId,
-        amount,
+      // Extract relevant data from the request body sent by the frontend
+      const { eventId, userId, amount, cardDetails } = req.body;
+  
+      // Create a new payment transaction record
+      const paymentTransaction = new PaymentTransactions({
+        eventId, // Event ID
+        attendeeId: userId, // User ID
         paymentDate: new Date(),
-        paymentStatus,
+        paymentStatus: 'completed', // You can set this to 'completed' if the payment was successful
       });
-      await newPayment.save();
-
-      // Enroll the user in the event
-      const enrollmentMessage = await eventController.enrollUserInEvent(ticket.eventId, ticket.attendeeId, ticketId);
-
-      return res.status(201).json({ message: 'Payment transaction created and user enrolled.', enrollmentMessage });
+  
+      // Save the payment transaction to your database
+      const savedPayment = await paymentTransaction.save();
+  
+      // Respond to the frontend with a success message
+      res.json({ success: true, message: 'Payment transaction created successfully' });
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Failed to create payment transaction.' });
+      console.error('Error creating payment transaction:', error);
+      // Respond with an error message
+      res.status(500).json({ success: false, message: 'Error creating payment transaction' });
     }
+  
   },
   
     updatePaymentStatus: async (req, res) => {

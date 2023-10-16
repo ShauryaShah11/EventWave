@@ -1,31 +1,24 @@
 import React, { useState } from "react";
 import { Navbar, Nav, Container, Dropdown, Form, Button, Row, Col } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import {Routes as CustomRoutes} from "../../routes";
+import { Routes as CustomRoutes } from "../../routes";
 
 function Navigation() {
-  const [searchQuery, setSearchQuery] = useState(""); // State to store the search query
+  const [searchQuery, setSearchQuery] = useState("");
   const userToken = localStorage.getItem("userToken");
   const navigate = useNavigate();
 
-  // Function to handle the search action
   const handleSearch = () => {
     navigate(`/search?query=${searchQuery}`);
   };
-  // Check if the userToken is set in local storage
 
-
-  // Function to handle logout
   const handleLogout = () => {
-    // Remove userToken from local storage
     localStorage.removeItem("userToken");
-
-    // Redirect to the login page or any other appropriate route
-    navigate(CustomRoutes.Signin.path); // Change the route as needed
+    navigate(CustomRoutes.Signin.path);
   };
 
   return (
-    <Navbar expand="lg" variant="dark" sticky="top" style={{ backgroundColor: "#2874f0" }}>
+    <Navbar expand="lg" variant="dark" sticky="top" style={{ backgroundColor: "rgb(5, 2, 19)" }}>
       <Container>
         <Navbar.Brand as={Link} to="/" style={{ color: "#fff", fontWeight: "bold", fontSize: "24px" }}>
           Event Management System
@@ -45,7 +38,7 @@ function Navigation() {
                     marginRight: "0",
                   }}
                 />
-                <Button variant="outline-light" style={{ borderRadius: "0 20px 20px 0" }}>
+                <Button variant="outline-light" style={{ borderRadius: "0 20px 20px 0" }} onClick={handleSearch}>
                   Search
                 </Button>
               </Form.Group>
@@ -75,7 +68,10 @@ function Navigation() {
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <Dropdown.Item>Profile</Dropdown.Item>
-                        <Dropdown.Item>Settings</Dropdown.Item>
+                        <Dropdown.Item onClick={() => navigate(CustomRoutes.EventAttendee.path)}>
+                          My Events
+                        </Dropdown.Item>
+
                         <Dropdown.Divider />
                         <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
                       </Dropdown.Menu>

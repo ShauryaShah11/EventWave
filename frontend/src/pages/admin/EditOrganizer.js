@@ -9,6 +9,7 @@ import { Routes as CustomRoutes } from "../../routes";
 const EditOrganizer = () => {
   const [organizerData, setOrganizerData] = useState();
   const [errorMessage, setErrorMessage] = useState(null);
+  const token = localStorage.getItem('adminToken')
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,7 +23,8 @@ const EditOrganizer = () => {
         {
           method: "GET",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // Include the token in the request headers
           }
         }
       );
@@ -44,7 +46,8 @@ const EditOrganizer = () => {
         {
           method: "PUT", // Use 'PUT' method to update the attendee
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // Include the token in the request headers
           },
           body: JSON.stringify(organizerData)
         }

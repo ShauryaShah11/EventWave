@@ -1,5 +1,6 @@
 import express from 'express';
 import userController from '../controllers/userController.js'; // Import your authController
+import { verifyToken } from '../../config/middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -10,9 +11,9 @@ router.post('/logout', userController.logout); // User logout
 
 router.get('/', userController.getAllUsers); // get all users
 
-router.get('/:id', userController.getUser); // get all users
-router.put('/:id', userController.updateUser); // update user
-router.delete('/:id', userController.removeUser); // User logout
+router.get('/:id', verifyToken, userController.getUser); // get all users
+router.put('/:id', verifyToken, userController.updateUser); // update user
+router.delete('/:id', verifyToken, userController.removeUser); // User logout
 
 // Add more authentication-related routes as needed
 

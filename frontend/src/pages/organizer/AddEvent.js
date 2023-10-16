@@ -9,7 +9,7 @@ const AddEvent = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const navigate = useNavigate();
-
+  const token = localStorage.getItem('organizerToken');
   const save = async (eventData) => {
     try {
 
@@ -36,11 +36,15 @@ const AddEvent = () => {
         formData.append("eventImages", file);
       });
       
-      // Don't set the "Content-Type" header when sending FormData
       const response = await fetch(`http://localhost:8000/events/create`, {
         method: "POST",
         body: formData,
-      });
+        headers: {
+            // Include the token in the "Authorization" header
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+
     
       if (!response.ok) {
         const responseData = await response.json();
