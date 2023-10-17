@@ -47,8 +47,8 @@ function Events() {
     <Container className="mt-4 mb-4">
       <Row>
         {eventData.length === 0 ? (
-          <Col>
-            <p>No events found.</p>
+          <Col className="text-center my-5">
+            <p className="text-muted display-4 mt-5 mb-5">No events found.</p>
           </Col>
         ) : (
           eventData.map((event) => (
@@ -56,6 +56,9 @@ function Events() {
           ))
         )}
       </Row>
+
+
+
     </Container>
   );
 }

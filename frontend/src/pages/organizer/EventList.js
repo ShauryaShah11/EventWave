@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
-import { Breadcrumb } from "@themesberg/react-bootstrap";
 import { EventTable } from "../../components/common/Tables";
 import { useNavigate } from "react-router-dom";
 import { Routes as CustomRoutes } from "../../routes";
-
+import BreadcrumbSection from "../../components/common/BreadcrumbSection";
 const EventList = () => {
   const [eventData, setEventData] = useState([]);
   const navigate = useNavigate();
@@ -74,26 +71,12 @@ const EventList = () => {
 
   return (
     <>
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-        <div className="d-block mb-4 mb-md-0">
-          <Breadcrumb
-            listProps={{
-              className: "breadcrumb-primary breadcrumb-text-light text-white"
-            }}
-          >
-            <Breadcrumb.Item>
-              <FontAwesomeIcon icon={faHome} />
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>Tables</Breadcrumb.Item>
-            <Breadcrumb.Item active>Event List</Breadcrumb.Item>
-          </Breadcrumb>
-          <h4>Event List</h4>
-        </div>
-      </div>
+      <BreadcrumbSection title="Event List" />
       <EventTable
         events={eventData}
         onDeleteEvent={handleDeleteEvent}
         onEditEvent={handleUpdateEvent}
+
       />
     </>
   );

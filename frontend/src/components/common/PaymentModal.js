@@ -1,13 +1,18 @@
 import React from 'react';
 import { Modal, Button } from "react-bootstrap";
 
-function PaymentModal({showPaymentModal, handlePaymentSuccess}) {
+function PaymentModal({showPaymentModal, handlePaymentSuccess, errorMessage}) {
     return (
       <Modal show={showPaymentModal} onHide={handlePaymentSuccess}>
         <Modal.Header closeButton>
           <Modal.Title>Payment Form</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+        {errorMessage && (
+            <div className="alert alert-danger">
+              {errorMessage}
+            </div>
+          )}
           <form>
             <div className="mb-3">
               <label htmlFor="cardNumber" className="form-label">
@@ -75,4 +80,4 @@ function PaymentModal({showPaymentModal, handlePaymentSuccess}) {
     );
   }
   
-  export default PaymentModal;
+export default PaymentModal;

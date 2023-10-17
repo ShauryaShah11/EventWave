@@ -136,7 +136,7 @@ export const UserTable = ({ attendees, onDeleteAttendee, onEditAttendee }) => {
         </Card.Footer>
       </Card.Body>
       <ConfirmationModal
-        subject="attendee"
+        subject="Are you sure you want to delete this attendee ?"
         show={showConfirmationModal}
         onHide={handleCancelDelete}
         onConfirm={handleConfirmDelete}
@@ -237,7 +237,7 @@ export const OrganizerTable = ({
         </Card.Footer>
       </Card.Body>
       <ConfirmationModal
-        subject="organizer"
+        subject="Are you sure you want to delete this organizer?"
         show={showConfirmationModal}
         onHide={handleCancelDelete}
         onConfirm={handleConfirmDelete}
@@ -246,7 +246,7 @@ export const OrganizerTable = ({
   );
 };
 
-export const EventTable = ({ events, onDeleteEvent, onEditEvent }) => {
+export const EventTable = ({ events, onDeleteEvent, onEditEvent, handleToggleFeature, userRole }) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
 
@@ -274,9 +274,10 @@ export const EventTable = ({ events, onDeleteEvent, onEditEvent }) => {
               <th className="border-bottom">#</th>
               <th className="border-bottom">Event Name</th>
               <th className="border-bottom">Event Date</th>
-              <th className="border-bottom">Event Description</th>
-              <th className="border-bottom">ticket Price</th>
               <th className="border-bottom">Event Venue</th>
+              <th className="border-bottom">ticket quantity</th>
+              <th className="border-bottom">ticket Price</th>
+              <th className="border-bottom">Feature</th>
               <th className="border-bottom">Action</th>
             </tr>
           </thead>
@@ -293,12 +294,6 @@ export const EventTable = ({ events, onDeleteEvent, onEditEvent }) => {
                   })}</span>
                 </td>
                 <td>
-                  <span className="fw-normal">{event.eventDescription}</span>
-                </td>
-                <td>
-                  <span className="fw-normal">{event.ticketPrice}</span>
-                </td>
-                <td>
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <span style={{ fontWeight: "normal" }}>
                       {event.eventAddress.street},
@@ -310,8 +305,28 @@ export const EventTable = ({ events, onDeleteEvent, onEditEvent }) => {
                       {event.eventAddress.country},{event.eventAddress.zipCode}
                     </span>
                   </div>
+                </td>                
+                <td>
+                  <span className="fw-normal">{event.ticketQuantity}</span>
                 </td>
-
+                <td>
+                  <span className="fw-normal">₹{event.ticketPrice}</span>
+                </td>                
+                {userRole === "admin" ? (
+                  <td>
+                    {event.isFeatured ? (
+                      <Button onClick={() => handleToggleFeature(event._id, false)}>
+                        Unfeature
+                      </Button>
+                    ) : (
+                      <Button onClick={() => handleToggleFeature(event._id, true)}>
+                        Feature
+                      </Button>
+                    )}
+                  </td>
+                ) : (
+                  <td>{event.isFeatured ? "Featured" : "Not Featured"}</td>
+                )}
                 <td>
                   <Button
                     variant="outline-secondary"
@@ -350,7 +365,7 @@ export const EventTable = ({ events, onDeleteEvent, onEditEvent }) => {
         </Card.Footer>
       </Card.Body>
       <ConfirmationModal
-        subject="event"
+        subject="Are you sure you want to delete this event?"
         show={showConfirmationModal}
         onHide={handleCancelDelete}
         onConfirm={handleConfirmDelete}
@@ -362,15 +377,17 @@ export const EventTable = ({ events, onDeleteEvent, onEditEvent }) => {
 export const EventAttendeTable = ({eventAttendeeData}) => {
   
   return (
-    <Card border="light" className="table-wrapper table-responsive shadow-sm mx-10 mb-5 ">
+    <Card border="light" className="table-wrapper table-responsive shadow-sm mx-5 mb-5 ">
       <Card.Body className="pt-0">
         <Table hover className="user-table align-items-center">
           <thead>
             <tr>
               <th className="border-bottom">#</th>
               <th className="border-bottom">Event Name</th>
+              <th className="border-bottom">Event Venue</th>
               <th className="border-bottom">Event Date</th>
               <th className="border-bottom">Ticket Price</th>
+              <th className="border-bottom">Total Cost</th>
               <th className="border-bottom">Payment Status</th>
             </tr>
           </thead>
@@ -382,12 +399,28 @@ export const EventAttendeTable = ({eventAttendeeData}) => {
                   <span className="fw-normal">{event.eventName}</span>
                 </td>
                 <td>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span style={{ fontWeight: "normal" }}>
+                      {event.eventAddress.street},
+                    </span>
+                    <span style={{ fontWeight: "normal" }}>
+                      {event.eventAddress.city},{event.eventAddress.state},
+                    </span>
+                    <span style={{ fontWeight: "normal" }}>
+                      {event.eventAddress.country},{event.eventAddress.zipCode}
+                    </span>
+                  </div>
+                </td>
+                <td>
                   <span className="fw-normal">{new Date(event.eventDate).toLocaleDateString("en-IN",{
                     year: "numeric", month:"short", day:"numeric", hour:"numeric",minute:"numeric"
                   })}</span>
                 </td>
                 <td>
-                  <span className="fw-normal">{event.ticketPrice}</span>
+                  <span className="fw-normal">{event.ticketQuantity} x ₹{event.ticketPrice}</span>
+                </td>
+                <td>
+                  <span className="fw-normal">₹{event.totalCost}</span>
                 </td>
                 <td>
                   <span className="fw-normal">{event.paymentStatus}</span>

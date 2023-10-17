@@ -34,6 +34,7 @@ export const AddEventForm = ({ onSave, errorMessage }) => {
   const [formData, setFormData] = useState({
     eventName: "",
     ticketPrice: "",
+    ticketQuantity: "",
     eventDescription: "",
     address: {
       street: "",
@@ -138,6 +139,33 @@ export const AddEventForm = ({ onSave, errorMessage }) => {
                   type="number"
                   name="ticketPrice"
                   placeholder="$0+"
+                  value={formData.ticketPrice} // Make sure to bind this field to your form state
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6} className="mb-3">
+              <Form.Group>
+                <Form.Label>Ticket Quantity</Form.Label>
+                <Form.Control
+                  required
+                  type="number"
+                  name="ticketQuantity"
+                  placeholder="Enter quantity"
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col md={6} className="mb-3">
+              <Form.Group>
+                <Form.Label>Event Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows="3"
+                  required
+                  name="eventDescription"
                   onChange={handleInputChange}
                 />
               </Form.Group>
@@ -169,7 +197,6 @@ export const AddEventForm = ({ onSave, errorMessage }) => {
                           </button>
                         </div>
                         <div className="file-preview">
-
                           {!file.type.startsWith("image/") && (
                             <span className="file-type">
                               File type: {file.type}
@@ -180,20 +207,6 @@ export const AddEventForm = ({ onSave, errorMessage }) => {
                     ))}
                   </ul>
                 )}
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col md={6} className="mb-3">
-              <Form.Group>
-                <Form.Label>Event Description</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows="3"
-                  required
-                  name="eventDescription"
-                  onChange={handleInputChange}
-                />
               </Form.Group>
             </Col>
           </Row>
@@ -282,4 +295,3 @@ export const AddEventForm = ({ onSave, errorMessage }) => {
     </Card>
   );
 };
-

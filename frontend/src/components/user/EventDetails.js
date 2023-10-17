@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { redirect, useLocation, useNavigate } from "react-router-dom";
-import { Container, Row, Col, Card, Button, Carousel, Image } from "react-bootstrap";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Container, Row, Col, Card, Button, Carousel, Image, Form } from "react-bootstrap";
 import { Routes as CustomRoutes } from "../../routes.js";
-import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
+import jwt_decode from "jwt-decode";
 import PaymentModal from "../common/PaymentModal";
-import "./EventDetails.css"; // Import your CSS file
+import "./EventDetails.css";
 
 function EventDetails() {
   const [eventData, setEventData] = useState(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [ticketQuantity, setTicketQuantity] = useState(1);
+  const [errorMessage, setErrorMessage] = useState(null);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const eventId = searchParams.get("id");
   const userToken = localStorage.getItem("userToken");
-
   const navigate = useNavigate();
-  // Function to handle the payment using a payment gateway
+
   const handlePayment = async () => {
     const decodedToken = jwt_decode(userToken);
     try {
-      // Make an API request to your payment service
       const paymentResponse = await fetch('http://localhost:8000/payments/payment-confirm', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${userToken}`, // Include the token in the request headers
+          'Authorization': `Bearer ${userToken}`,
         },
         body: JSON.stringify({
           eventId: eventId,
@@ -33,42 +33,50 @@ function EventDetails() {
           cardDetails: { /* Add card details here */ },
         }),
       });
-  
+
       const responseData = await paymentResponse.json();
-  
+
       if (paymentResponse.ok && responseData.success) {
-        console.log("hello qorld!");
         return { success: true, message: 'Payment was successful' };
       } else {
+        setErrorMessage(responseData.message || 'Payment failed');
         return { success: false, message: 'Payment failed' };
       }
     } catch (error) {
+      setErrorMessage('Payment failed due to an error');
       return { success: false, message: 'Payment failed due to an error' };
     }
-  };  
+  };
 
-  // Function to register the user to the event
+  const handleTicketQuantityChange = (event) => {
+    const quantity = parseInt(event.target.value, 10);
+    if (!isNaN(quantity) && quantity >= 1) {
+      setTicketQuantity(quantity);
+    }
+  };
+
   const registerUserToEvent = async (eventId, userId) => {
     try {
-      // Make an API request to your server to register the user for the event
       const registrationResponse = await fetch('http://localhost:8000/events/enrollment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${userToken}`, // Include the token in the request headers
+          'Authorization': `Bearer ${userToken}`,
         },
         body: JSON.stringify({
-          eventId, // Event ID
-          userId, // User ID
+          eventId,
+          userId,
+          ticketQuantity,
         }),
       });
 
       const registrationData = await registrationResponse.json();
 
       if (registrationResponse.ok && registrationData.success) {
-        return { success: true, message: 'Registration successful' };
+        return true;
       } else {
-        return { success: false, message: 'Registration failed' };
+        setErrorMessage(registrationData.message);
+        return false;
       }
     } catch (error) {
       return { success: false, message: 'Registration failed due to an error' };
@@ -95,20 +103,14 @@ function EventDetails() {
         console.error("Error fetching data:", error);
       }
     };
-    fetchData(); // Fetch data when the component mounts
+    fetchData();
   }, [eventId]);
 
-  if (!eventData) {
-    // Render a loading message or spinner while fetching data
-    return <div>Loading...</div>;
-  }
-
   const handleBuyTickets = () => {
-    if(!userToken){
+    if (!userToken) {
       navigate(CustomRoutes.Signin.path);
     }
     setShowPaymentModal(true);
-
   };
 
   const handlePaymentSuccess = async () => {
@@ -116,62 +118,78 @@ function EventDetails() {
     const paymentResult = await handlePayment();
 
     if (paymentResult.success) {
-      // Payment was successful, proceed with user registration
       const registrationResult = await registerUserToEvent(eventId, decodedToken.userId);
 
-      if (registrationResult.success) {
-        // Registration was successful
-        setShowPaymentModal(false); // Close the modal
-      } else {
-        // Handle registration failure
+      if (registrationResult) {
+        setShowPaymentModal(false);
       }
-    } else {
-      // Handle payment failure
     }
-    setShowPaymentModal(false);
-
   };
 
   return (
     <Container className="my-5">
-      <Row className="event-details-container mb-5">
-        <Col md={6}>
-          <Carousel>
-            {eventData.eventImages.map((image, index) => (
-              <Carousel.Item key={index}>
-                <div className="image-container">
-                  <Image
-                    src={`http://localhost:8000/images/${image}`}
-                    alt={`${eventData.eventName} Image ${index}`}
-                    className="d-block w-100"
-                  />
-                </div>
-              </Carousel.Item>
-            ))}
-          </Carousel>
-        </Col>
-        <Col md={6}>
-          <Card>
-            <Card.Body>
-              <Card.Title className="mb-3">{eventData.eventName}</Card.Title>
-              <Card.Subtitle className="mb-2 text-muted">
-                {eventData.eventAddress.city}, {eventData.eventAddress.state},{" "}
-                {eventData.eventAddress.country}
-              </Card.Subtitle>
-              <Card.Text className="mb-4">{eventData.eventDescription}</Card.Text>
-              <Card.Text>
-                Date: {new Date(eventData.eventDate).toLocaleDateString()}
-              </Card.Text>
-              <Card.Text>Ticket Price: ${eventData.ticketPrice}</Card.Text>
-              <Button variant="primary" block className="mt-4" onClick={handleBuyTickets}>
-                Buy Tickets
-              </Button>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+      {eventData ? (
+        <Row className="event-details-container mb-5">
+          <Col md={6}>
+            <Carousel>
+              {eventData.eventImages.map((image, index) => (
+                <Carousel.Item key={index}>
+                  <div className="image-container">
+                    <Image
+                      src={`http://localhost:8000/images/${image}`}
+                      alt={`${eventData.eventName} Image ${index}`}
+                      className="d-block w-100"
+                    />
+                  </div>
+                </Carousel.Item>
+              ))}
+            </Carousel>
+          </Col>
+          <Col md={6}>
+            <Card>
+              <Card.Body>
+                <Card.Title className="mb-3">{eventData.eventName}</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted">
+                  {eventData.eventAddress.city}, {eventData.eventAddress.state},{" "}
+                  {eventData.eventAddress.country}
+                </Card.Subtitle>
+                <Card.Text className="mb-4">{eventData.eventDescription}</Card.Text>
+                <Card.Text>Organize By : {eventData.organizerId.username}</Card.Text>
+                <Card.Text>
+                  Date: {new Date(eventData.eventDate).toLocaleDateString()}
+                </Card.Text>
+                <Card.Text>Ticket Price: ₹{eventData.ticketPrice}</Card.Text>
+                <Card.Text>Available Ticket: {eventData.ticketQuantity}</Card.Text>
+                {
+                  eventData.ticketQuantity > 0 ? (
+                    <div>
+                      <Form.Group>
+                        <Form.Label>Ticket Quantity</Form.Label>
+                        <Form.Control
+                          type="number"
+                          placeholder="Enter quantity"
+                          onChange={handleTicketQuantityChange}
+                        />
+                      </Form.Group>
+                      <Button variant="primary" block className="mt-4" onClick={handleBuyTickets}>
+                        Buy Tickets
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button variant="secondary" block className="mt-4" disabled>
+                      Sold Out
+                    </Button>
+                  )
+                }
 
-      <PaymentModal showPaymentModal={showPaymentModal} handlePaymentSuccess={handlePaymentSuccess} />
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      ) : (
+        <p>Loading...</p>
+      )}
+      <PaymentModal showPaymentModal={showPaymentModal} handlePaymentSuccess={handlePaymentSuccess} errorMessage={errorMessage} />
     </Container>
   );
 }

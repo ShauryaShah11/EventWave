@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
-import {  Breadcrumb } from "@themesberg/react-bootstrap";
 import { OrganizerTable } from "../../components/common/Tables";
 import { Routes as CustomRoutes } from "../../routes";
+import BreadcrumbSection from "../../components/common/BreadcrumbSection";
 
 const OrganizerList = () => {
   const [organizerData, setOrganizerData] = useState([]);
@@ -74,23 +72,7 @@ const OrganizerList = () => {
   };
   return (
     <>
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-        <div className="d-block mb-4 mb-md-0">
-          <Breadcrumb
-            listProps={{
-              className: "breadcrumb-primary breadcrumb-text-light text-white"
-            }}
-          >
-            <Breadcrumb.Item>
-              <FontAwesomeIcon icon={faHome} />
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>Tables</Breadcrumb.Item>
-            <Breadcrumb.Item active>Organizer List</Breadcrumb.Item>
-          </Breadcrumb>
-          <h4>Organizer List</h4>
-          {/* <p className="mb-0"></p> */}
-        </div>
-      </div>
+      <BreadcrumbSection title="Organizer List" />
       <OrganizerTable
         organizers={organizerData}
         onDeleteOrganizer={handleDeleteOrganizer}

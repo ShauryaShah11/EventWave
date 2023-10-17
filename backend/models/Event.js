@@ -20,6 +20,11 @@ const eventSchema = new mongoose.Schema({
         min: 0, // Assuming ticket price cannot be negative
         required: true,
     },
+    ticketQuantity: {
+        type: Number,
+        min: 0, // Assuming ticket quantity cannot be negative
+        required: true,
+    },
     eventImages: [
         {
             type: String,
@@ -30,6 +35,10 @@ const eventSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Address', // Reference the 'Address' model
         required: true,
+    },
+    isFeatured: {
+        type: Boolean, // New field for indicating if the event is featured
+        default: false, // Default to not featured
     },
     // Add any other event-specific fields here
 });

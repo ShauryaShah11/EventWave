@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Container,
@@ -11,13 +11,39 @@ import {
 import { Routes as CustomRoutes } from "../../routes";
 
 function Home() {
+  const [featuredEvents, setFeaturedEvents] = useState([]);
+
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/events/featured`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      setFeaturedEvents(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
   return (
     <div>
       {/* Hero Section */}
       <header
-        className="hero text-white text-center py-10"
+        className="hero text-white text-center py-11"
         style={{
-          background: "url('https://images.pexels.com/photos/2952834/pexels-photo-2952834.jpeg?auto=compress&cs=tinysrgb&w=600') center/cover no-repeat",
+          background: "url('https://images.pexels.com/photos/2952834/pexels-photo-2952834.jpeg?auto=compress&cs=tinysrgb&w=1920') center/cover no-repeat",
         }}
       >
         <Carousel controls={false} indicators={false} interval={3000}>
@@ -39,59 +65,23 @@ function Home() {
         <Container>
           <h2 className="text-center mb-4">Featured Events</h2>
           <Row>
-            {/* Featured Event 1 */}
-            <Col xs={12} md={4}>
-              <Card>
-                <Card.Img
-                  variant="top"
-                  src="https://via.placeholder.com/300x200"
-                  alt="Event 1"
-                />
-                <Card.Body>
-                  <Card.Title>Event 1</Card.Title>
-                  <Card.Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Card.Text>
-                  <Button variant="primary">Learn More</Button>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            {/* Featured Event 2 */}
-            <Col xs={12} md={4}>
-              <Card>
-                <Card.Img
-                  variant="top"
-                  src="https://via.placeholder.com/300x200"
-                  alt="Event 2"
-                />
-                <Card.Body>
-                  <Card.Title>Event 2</Card.Title>
-                  <Card.Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Card.Text>
-                  <Button variant="primary">Learn More</Button>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            {/* Featured Event 3 */}
-            <Col xs={12} md={4}>
-              <Card>
-                <Card.Img
-                  variant="top"
-                  src="https://via.placeholder.com/300x200"
-                  alt="Event 3"
-                />
-                <Card.Body>
-                  <Card.Title>Event 3</Card.Title>
-                  <Card.Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Card.Text>
-                  <Button variant="primary">Learn More</Button>
-                </Card.Body>
-              </Card>
-            </Col>
+            {featuredEvents.map((event) => (
+              <Col key={event._id} xs={12} md={4}>
+                <Card className="mb-4">
+                  <Card.Img
+                    variant="top"
+                    src={`http://localhost:8000/images/${event.eventImages[0]}`}
+                    alt={event.eventName}
+                  />
+                  <Card.Body className="d-flex flex-column align-items-center">
+                    <Card.Title className="text-center">{event.eventName}</Card.Title>
+                    <Button as={Link} to={`${CustomRoutes.EventDetails.path}?id=${event._id}`} variant="primary">
+                      Details
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
           </Row>
         </Container>
       </section>

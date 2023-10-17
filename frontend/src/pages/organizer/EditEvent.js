@@ -46,6 +46,7 @@ const EditEvent = () => {
       formData.append("eventName", eventData.eventName);
       formData.append("eventDescription", eventData.eventDescription);
       formData.append("ticketPrice", eventData.ticketPrice);
+      formData.append("ticketQuantity", eventData.ticketQuantity);
       formData.append("eventDate", eventData.eventDate);
   
       // Append each file to the form data

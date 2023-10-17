@@ -34,6 +34,7 @@ export const EditEventForm = ({ event, onUpdate, errorMessage }) => {
   const [formData, setFormData] = useState({
     eventName: "",
     ticketPrice: "",
+    ticketQuantity: "",
     eventDescription: "",
     address: {
       street: "",
@@ -48,12 +49,13 @@ export const EditEventForm = ({ event, onUpdate, errorMessage }) => {
   
   useEffect(() => {
     if (event) {
-      const { eventName, ticketPrice, eventDescription, eventDate, eventAddress, eventImages } = event;
+      const { eventName, ticketPrice, ticketQuantity,eventDescription, eventDate, eventAddress, eventImages } = event;
       setEventDate(eventDate || "");
       setFormData({
         eventName: eventName || "",
         eventDescription: eventDescription || "",
         ticketPrice: ticketPrice || "",
+        ticketQuantity: ticketQuantity || "",
         address: eventAddress || "",
         eventImages: eventImages || "",
       });
@@ -159,6 +161,34 @@ export const EditEventForm = ({ event, onUpdate, errorMessage }) => {
             </Col>
             <Col md={6} className="mb-3">
               <Form.Group>
+                <Form.Label>Ticket Quantity</Form.Label>
+                <Form.Control
+                  required
+                  type="number"
+                  name="ticketQuantity"
+                  placeholder="Enter quantity"
+                  value={formData.ticketQuantity}
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col md={6} className="mb-3">
+              <Form.Group>
+                <Form.Label>Event Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows="3"
+                  required
+                  name="eventDescription"
+                  value={formData.eventDescription}
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6} className="mb-3">
+              <Form.Group>
                 <Form.Label className="form-label">Event Images</Form.Label>
                 <Form.Control
                   type="file"
@@ -194,21 +224,6 @@ export const EditEventForm = ({ event, onUpdate, errorMessage }) => {
                     ))}
                   </ul>
                 )}
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col md={6} className="mb-3">
-              <Form.Group>
-                <Form.Label>Event Description</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows="3"
-                  required
-                  name="eventDescription"
-                  value={formData.eventDescription}
-                  onChange={handleInputChange}
-                />
               </Form.Group>
             </Col>
           </Row>

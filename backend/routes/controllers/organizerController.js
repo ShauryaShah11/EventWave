@@ -8,15 +8,12 @@ import Organizer from '../../models/Organizer.js'; // Import your Event model
 const organizerController = {
     // Create a new organizer
     async register(req, res) {
-      try {
-
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    
+      try {  
         // Create a new user
         const newUser = new User({
           username: req.body.username,
           email: req.body.email,
-          password: hashedPassword,
+          password: req.body.password,
           role: "organizer",
         });
     

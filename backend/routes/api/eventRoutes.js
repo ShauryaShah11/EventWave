@@ -9,12 +9,15 @@ const router = express.Router();
 // Define routes for event-related functionality
 router.get('/', eventController.getAllEvents);
 router.post('/create', verifyToken, eventController.postEvent); // Create a new event
-router.put('/:id', verifyToken, eventController.updateEvent); // Update event details by ID
-router.delete('/:id', verifyToken , eventController.deleteEvent); // Delete an event by ID
-router.get('/:id', eventController.getEventById);
-router.get('/organizer/:id', verifyToken, eventController.getEventByOrganizerId);
+router.put('/:eventId', verifyToken, eventController.updateEvent); // Update event details by ID
+router.delete('/:eventId', verifyToken , eventController.deleteEvent); // Delete an event by ID
+router.get('/featured', eventController.getFeaturedEvent);
+router.get('/:eventId', eventController.getEventById);
+router.get('/organizer/:organizerId', verifyToken, eventController.getEventByOrganizerId);
 router.post('/enrollment/', verifyToken, eventController.enrollUserInEvent);
-router.get('/events-attended/:userId', verifyToken, eventController.getEventsAttendedByUser)
+router.get('/events-attended/:userId', verifyToken, eventController.getEventsAttendedByUser);
+router.put('/toggle-feature/:eventId', verifyToken, eventController.toggleEventFeature ); // Update event details by ID
+
 //  Define more routes as needed
 
 export default router;

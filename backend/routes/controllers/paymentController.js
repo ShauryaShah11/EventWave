@@ -8,6 +8,7 @@ const paymentController = {
       const { eventId, userId, amount, cardDetails } = req.body;
   
       // Create a new payment transaction record
+      
       const paymentTransaction = new PaymentTransactions({
         eventId, // Event ID
         attendeeId: userId, // User ID

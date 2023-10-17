@@ -11,14 +11,22 @@ const eventAttendeesSchema = new mongoose.Schema({
         ref: 'Attendee', // Reference the 'Attendee' model
         required: true,
     },
+    paymentId: {
+        type: Schema.Types.ObjectId,
+        ref: 'PaymentTransactions', // Reference the 'PaymentTransactions' model
+    },
     attendanceStatus: {
         type: String,
         enum: ['attending', 'not_attending', 'pending'],
         required: true,
     },
-    paymentId: {
-        type: Schema.Types.ObjectId,
-        ref: 'PaymentTransactions', // Reference the 'PaymentTransactions' model
+    ticketQuantity: {
+        type: Number,
+        default: 1, // Default to 1 ticket
+        min: 1, // Assuming the minimum quantity is 1
+    },
+    totalCost: {
+        type: Number, // Store the total cost of the event for this attendee
     },
 });
 

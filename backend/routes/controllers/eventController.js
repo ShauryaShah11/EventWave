@@ -18,6 +18,7 @@ const eventController = {
           eventDescription,
           eventDate,
           ticketPrice,
+          ticketQuantity,
           street,
           city,
           state,
@@ -46,6 +47,7 @@ const eventController = {
           eventDescription,
           eventDate,
           ticketPrice,
+          ticketQuantity,
           eventImages: images,
           eventAddress: savedAddress._id, // Use the saved address here
         });
@@ -71,8 +73,8 @@ const eventController = {
     upload.array("eventImages", 5),
     async (req, res) => {
       try {
-        const eventId = req.params.id;
-        const { eventName, eventDescription, ticketPrice, eventDate } = req.body;
+        const eventId = req.params.eventId;
+        const { eventName, eventDescription, ticketPrice, ticketQuantity, eventDate } = req.body;
         const eventImages = req.files; // Assuming this is for updating event images
 
         // Parse the address string into an object
@@ -107,6 +109,7 @@ const eventController = {
             eventName,
             eventDescription,
             ticketPrice,
+            ticketQuantity,
             eventDate,
             eventImages: images, // Assuming eventImages are updated here
           },
@@ -130,7 +133,7 @@ const eventController = {
   // Delete an event by ID
   deleteEvent: async (req, res) => {
     try {
-      const eventId = req.params.id;
+      const eventId = req.params.eventId;
       const event = await Event.findById(eventId);
       const addressId = event.eventAddress;
       const address = await Address.findByIdAndDelete(addressId);
@@ -151,7 +154,7 @@ const eventController = {
     try {
       const events = await Event.find().populate("organizerId")
         .populate("eventAddress", "street city state country zipCode")
-        .select("eventName eventDescription eventDate ticketPrice eventImages");
+        .select("eventName eventDescription eventDate ticketPrice ticketQuantity eventImages isFeatured");
       return res.status(200).json(events);
     } catch (error) {
       console.error(error);
@@ -162,10 +165,10 @@ const eventController = {
   // Get event By Id
   getEventById: async (req, res) => {
     try {
-      const eventId = req.params.id;
+      const eventId = req.params.eventId;
       const event = await Event.findById(eventId).populate("organizerId")
         .populate("eventAddress", "street city state country zipCode")
-        .select("eventName eventDescription eventDate ticketPrice eventImages");
+        .select("eventName eventDescription eventDate ticketPrice ticketQuantity eventImages isFeatured");
 
       if (!event) {
         return res.status(404).json({ error: "Event Not Found." });
@@ -180,11 +183,11 @@ const eventController = {
 
   getEventByOrganizerId: async (req, res) => {
     try {
-      const organizerId = req.params.id;
+      const organizerId = req.params.organizerId;
 
       const events = await Event.find({ organizerId }).populate("organizerId")
         .populate("eventAddress", "street city state country zipCode")
-        .select("eventName eventDescription eventDate ticketPrice eventImages");
+        .select("eventName eventDescription eventDate ticketPrice ticketQuantity eventImages isFeatured");
 
       if (!events) {
         return res.status(404).json({ error: "Event not found" });
@@ -197,10 +200,27 @@ const eventController = {
     }
   },
 
+  getFeaturedEvent: async (req, res) => {
+    try {      
+      const featuredEvents = await Event.find({ isFeatured: true });
+  
+      return res.json(featuredEvents); // Send the featured events as a JSON response
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Failed to retrieve featured events' });
+    }
+  },  
+
   enrollUserInEvent: async (req, res) => {
     try {
       const eventId = req.body.eventId;
       const attendeeId = req.body.userId;
+      const ticketQuantity = req.body.ticketQuantity;
+  
+      const event = await Event.findOne({ _id: eventId });
+      if (event.ticketQuantity < ticketQuantity) {
+        return res.status(400).json({ success: false, message: "Not enough tickets available." });
+      }
   
       // Check if the payment transaction is completed
       const payment = await PaymentTransactions.findOne({
@@ -212,12 +232,17 @@ const eventController = {
         return res.status(400).json({ success: false, message: "Payment not completed." });
       }
   
+      event.ticketQuantity = event.ticketQuantity - ticketQuantity;
+
+      await event.save();
       // Create an enrollment record
       const enrollment = new EventAttendees({
         eventId: eventId,
         attendeeId: attendeeId,
+        paymentId: payment._id,
         attendanceStatus: "attending",
-        paymentId: payment._id
+        ticketQuantity: ticketQuantity,
+        totalCost: event.ticketPrice * ticketQuantity
       });
   
       await enrollment.save();
@@ -234,27 +259,30 @@ const eventController = {
       const userId = req.params.userId;
   
       const attendedEvents = await EventAttendees.find({ attendeeId: userId })
-        .populate({ path: 'eventId' });
+        .populate({ path: 'eventId' , populate: { path: 'eventAddress' } });
 
         const eventsWithPaymentStatus = await Promise.all(
           attendedEvents.map(async (attendance) => {
             const event = attendance.eventId;
             const paymentId = attendance.paymentId;
             const payment = await PaymentTransactions.findOne({ _id: paymentId });
+            const totalCost = event.ticketPrice * attendance.ticketQuantity;
 
             return {
               _id: event._id,
               eventName: event.eventName,
               eventDescription: event.eventDescription,
+              eventAddress: event.eventAddress,
               eventDate: event.eventDate,
               ticketPrice: event.ticketPrice,
+              ticketQuantity: attendance.ticketQuantity,
+              totalCost: totalCost,
               eventImages: event.eventImages,
               eventAddress: event.eventAddress,
               paymentStatus: payment ? payment.paymentStatus : 'Not paid',
             };
           })
-        );
-        
+        );        
 
       return res.json(eventsWithPaymentStatus);
 
@@ -262,10 +290,32 @@ const eventController = {
       console.error(error);
       return res.status(500).json({ error: 'Failed to retrieve events attended by the user' });
     }
+  },
+
+  toggleEventFeature: async (req, res) => {
+    const eventId = req.params.eventId;
+    const { isFeatured } = req.body;
+
+    try{
+      const event = await Event.findById(eventId);
+
+      if(!event){
+        return res.status(404).json({ error: 'Event not found' });
+      }
+
+      event.isFeatured = isFeatured
+
+      await event.save();
+
+      return res.status(200).json({ message: 'Event feature status updated successfully' });
+    } 
+    catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Failed to update event feature status' });
+    }
   }
   
 
-  // Add more controller methods as needed
 };
 
 export default eventController;

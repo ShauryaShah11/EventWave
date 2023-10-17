@@ -7,7 +7,7 @@ const ConfirmationModal = ({ subject, show, onHide, onConfirm }) => {
       <Modal.Header closeButton>
         <Modal.Title>Confirm Deletion</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Are you sure you want to delete this {subject}?</Modal.Body>
+      <Modal.Body>{subject}</Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
           Cancel

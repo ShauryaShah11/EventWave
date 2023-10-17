@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
-import { Breadcrumb } from "@themesberg/react-bootstrap";
 import { UserTable } from "../../components/common/Tables";
 import { useNavigate } from "react-router-dom";
 import { Routes as CustomRoutes } from "../../routes";
+import BreadcrumbSection from "../../components/common/BreadcrumbSection";
 
 const AttendeeList = () => {
   const [userData, setUserData] = useState([]);
@@ -34,7 +32,6 @@ const AttendeeList = () => {
 
   const deleteAttendee = async (attendeeId) => {
     try {
-      console.log("Deleting");
       const response = await fetch(
         `http://localhost:8000/users/${attendeeId}`,
         {
@@ -74,22 +71,7 @@ const AttendeeList = () => {
 
   return (
     <>
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-        <div className="d-block mb-4 mb-md-0">
-          <Breadcrumb
-            listProps={{
-              className: "breadcrumb-primary breadcrumb-text-light text-white"
-            }}
-          >
-            <Breadcrumb.Item>
-              <FontAwesomeIcon icon={faHome} />
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>Tables</Breadcrumb.Item>
-            <Breadcrumb.Item active>Attendees List</Breadcrumb.Item>
-          </Breadcrumb>
-          <h4>Attendees List</h4>
-        </div>
-      </div>
+      <BreadcrumbSection title="Attendee List" />
       <UserTable
         attendees={userData}
         onDeleteAttendee={handleDeleteAttendee}

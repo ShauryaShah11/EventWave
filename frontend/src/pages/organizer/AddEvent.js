@@ -15,12 +15,12 @@ const AddEvent = () => {
 
       const organizerToken = localStorage.getItem("organizerToken");
       const decodedToken = jwt_decode(organizerToken);
-      console.log("decodedToken:", decodedToken);
       const formData = new FormData();
     
       formData.append("organizerId", decodedToken.userId);      
       formData.append("eventName", eventData.eventName);
       formData.append("ticketPrice", eventData.ticketPrice);
+      formData.append("ticketQuantity", eventData.ticketQuantity);
       formData.append("eventDescription", eventData.eventDescription);
       formData.append("eventDate", eventData.eventDate);
     
@@ -40,11 +40,9 @@ const AddEvent = () => {
         method: "POST",
         body: formData,
         headers: {
-            // Include the token in the "Authorization" header
             "Authorization": `Bearer ${token}`,
         },
     });
-
     
       if (!response.ok) {
         const responseData = await response.json();

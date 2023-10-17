@@ -1,16 +1,9 @@
 import React from "react";
 import { Col, Card, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Routes as CustomRoutes } from "../../routes";
 
 const EventCard = ({ event }) => {
-  const navigate = useNavigate();
-  const handleSubmit = () => {
-    // Handle the submission, e.g., set event id in URL or perform any other action
-    navigate(CustomRoutes.EventDetails.path + `?id=${event._id}`);
-
-  };
-
   return (
     <Col key={event._id} md={6} lg={4} className="mb-4">
       <Card className="h-100">
@@ -28,8 +21,8 @@ const EventCard = ({ event }) => {
             {event.category}
           </Card.Subtitle>
           <Card.Text>Date: {new Date(event.eventDate).toLocaleDateString()}</Card.Text>
-          <Button variant="primary" block onClick={handleSubmit}>
-            Learn More
+          <Button as={Link} to={`${CustomRoutes.EventDetails.path}?id=${event._id}`} variant="primary">
+            Details
           </Button>
         </Card.Body>
       </Card>
