@@ -5,56 +5,19 @@ import { faBell, faCog, faEnvelopeOpen, faSearch, faSignOutAlt, faUserShield } f
 import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
 import { Row, Col, Nav, Form, Image, Navbar, Dropdown, Container, ListGroup, InputGroup } from '@themesberg/react-bootstrap';
 import { Link, useNavigate } from "react-router-dom";
-import NOTIFICATIONS_DATA from "../../data/notifications";
 import Profile3 from "../../assets/img/team/profile-picture-3.jpg";
 import {Routes as CustomRoutes} from "../../routes";
 
 
 const NavBar = (props) => {
-  const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA);
   const navigate = useNavigate();
-  const areNotificationsRead = notifications.reduce((acc, notif) => acc && notif.read, true);
-
-  const markNotificationsAsRead = () => {
-    setTimeout(() => {
-      setNotifications(notifications.map(n => ({ ...n, read: true })));
-    }, 300);
-  };
 
   function handleLogout(){
     localStorage.removeItem("adminToken");
     localStorage.removeItem("organizerToken");
-
-
     // Redirect to the login page or any other appropriate route
     navigate(CustomRoutes.Signin.path); // Change the route as needed
   }
-
-  const Notification = (props) => {
-    const { link, sender, image, time, message, read = false } = props;
-    const readClassName = read ? "" : "text-danger";
-
-    return (
-      <ListGroup.Item action href={link} className="border-bottom border-light">
-        <Row className="align-items-center">
-          <Col className="col-auto">
-            <Image src={image} className="user-avatar lg-avatar rounded-circle" />
-          </Col>
-          <Col className="ps-0 ms--2">
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <h4 className="h6 mb-0 text-small">{sender}</h4>
-              </div>
-              <div className="text-end">
-                <small className={readClassName}>{time}</small>
-              </div>
-            </div>
-            <p className="font-small mt-1 mb-0">{message}</p>
-          </Col>
-        </Row>
-      </ListGroup.Item>
-    );
-  };
 
   return (
     <Navbar variant="dark" expanded className="ps-0 pe-2 pb-0">

@@ -13,6 +13,7 @@ router.put('/:eventId', verifyToken, eventController.updateEvent); // Update eve
 router.delete('/:eventId', verifyToken , eventController.deleteEvent); // Delete an event by ID
 router.get('/featured', eventController.getFeaturedEvent);
 router.get('/:eventId', eventController.getEventById);
+router.get('/:eventId/attendees', eventController.getAttendeesByEventId);
 router.get('/organizer/:organizerId', verifyToken, eventController.getEventByOrganizerId);
 router.post('/enrollment/', verifyToken, eventController.enrollUserInEvent);
 router.get('/events-attended/:userId', verifyToken, eventController.getEventsAttendedByUser);

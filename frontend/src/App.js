@@ -34,9 +34,10 @@ import EditEvent from "./pages/organizer/EditEvent";
 import NavBar from './components/user/navbar';
 import Home from './pages/user/Home';
 import Events from './pages/user/Events';
-import EventDetails from './components/user/EventDetails';
+import EventDetails from './pages/user/EventDetails';
 import UserFooter from './components/user/Footer';
-import EventAttendeeList from "./pages/user/UserEvent";
+import AttendeeEventsList from "./pages/user/UserEvent";
+import EventAttendeeList from "./pages/common/EventAttendee";
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -264,8 +265,13 @@ const HomePage =  () => (
     />
     <Route
       exact
+      path={CustomRoutes.AttendeeEvents.path}
+      element={<RouteWithNavBar component={AttendeeEventsList} />}
+    />
+    <Route
+      exact
       path={CustomRoutes.EventAttendee.path}
-      element={<RouteWithNavBar component={EventAttendeeList} />}
+      element={<RouteWithOrganizerSidebar component={EventAttendeeList} />}
     />
 
     <Route path="*" element={<NotFoundPage />} />

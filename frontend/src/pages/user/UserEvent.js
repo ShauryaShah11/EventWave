@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { EventAttendeTable } from "../../components/common/Tables";
+import { EventsAttendedByUser } from "../../components/common/Tables";
 import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
 
 const AttendeeList = () => {
@@ -35,12 +35,12 @@ const AttendeeList = () => {
 
   return (
     <>
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4 mx-10">
+      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4 mx-5">
         <div className="d-block mb-4 mb-md-0">
           <h4>Attended Event</h4>
         </div>
       </div>
-      <EventAttendeTable eventAttendeeData={eventAttendeeData}/>
+      <EventsAttendedByUser eventAttendeeData={eventAttendeeData}/>
     </>
   );
 };

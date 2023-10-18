@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 const eventSchema = new mongoose.Schema({
     organizerId: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Organizer',
         required: true,
     },
     eventName: {

@@ -8,7 +8,7 @@ const feedbackSchema = new mongoose.Schema({
     },
     attendeeId: {
         type: Schema.Types.ObjectId,
-        ref: 'Attendees',
+        ref: 'Attendee',
         required: true,
     },
     rating: {
@@ -18,6 +18,10 @@ const feedbackSchema = new mongoose.Schema({
         required: true,
     },
     comment: String,
+    feedbackTime: {
+        type: Date,
+        default: Date.now, // Set to the current date and time when not provided
+    },
 });
 
 const EventFeedback = mongoose.model('EventFeedback', feedbackSchema);

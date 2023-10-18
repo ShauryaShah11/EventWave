@@ -10,7 +10,6 @@ const userController = {
       const email = req.body.email;
       const password = req.body.password;
   
-      console.log(email, password);
       // Find the user by email
       const user = await User.findOne({ email });
       // If user not found or password doesn't match

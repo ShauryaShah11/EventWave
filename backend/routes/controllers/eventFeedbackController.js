@@ -1,15 +1,22 @@
 import EventFeedback from '../../models/EventFeedback.js'; // Import your EventFeedback model
+import Attendee from '../../models/Attendee.js'; // Import your Attend
 
 const eventFeedbackController = {
   async submitFeedback(req, res) {
     try {
-      const { eventId, attendeeId,rating, comment } = req.body;
+      console.log(req.body);
 
+      const { eventId, userId, rating, comment } = req.body;
+
+      const attendee = await Attendee.findOne({userId:userId});
+
+      const attendeeId = attendee._id;
       const newFeedback = new EventFeedback({
         eventId,
         attendeeId,
         rating,
         comment,
+        feedbackTime: new Date()
       });
 
       await newFeedback.save();
@@ -23,9 +30,11 @@ const eventFeedbackController = {
 
   async getEventFeedback(req, res) {
     try {
-      const eventId = req.params.id; // Event ID to fetch feedback for
+      const eventId = req.params.eventId; // Event ID to fetch feedback for
 
-      const feedback = await EventFeedback.find({ eventId });
+      const feedback = await EventFeedback.find({ eventId })
+        .populate('attendeeId', 'fullName')
+        .select('comment rating feedbackTime');
 
       return res.status(200).json(feedback);
     } catch (error) {

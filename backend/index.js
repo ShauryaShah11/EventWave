@@ -14,7 +14,7 @@ import organizerRoutes from './routes/api/organizerRoutes.js';
 import eventFeedbackRoutes from './routes/api/eventFeedbackRoutes.js';
 import paymentRoutes from './routes/api/paymentRoutes.js';
 import passwordResetRoutes from './routes/api/passwordResetRoutes.js';
-
+import revenueRoutes from './routes/api/revenueRoutes.js';
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -56,6 +56,7 @@ app.use('/organizer', organizerRoutes);
 app.use('/event-feedback', eventFeedbackRoutes);
 app.use('/payments', paymentRoutes);
 app.use('/password-reset', passwordResetRoutes);
+app.use('/revenue', revenueRoutes);
 
 app.get('/', (req, res) => {
   res.send('Welcome to the Event Management System API');

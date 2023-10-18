@@ -17,7 +17,7 @@ const AddEvent = () => {
       const decodedToken = jwt_decode(organizerToken);
       const formData = new FormData();
     
-      formData.append("organizerId", decodedToken.userId);      
+      formData.append("userId", decodedToken.userId);      
       formData.append("eventName", eventData.eventName);
       formData.append("ticketPrice", eventData.ticketPrice);
       formData.append("ticketQuantity", eventData.ticketQuantity);

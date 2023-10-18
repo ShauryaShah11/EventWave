@@ -1,16 +1,4 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleDown,
-  faAngleUp,
-  faArrowDown,
-  faArrowUp,
-  faEdit,
-  faEllipsisH,
-  faExternalLinkAlt,
-  faEye,
-  faTrashAlt
-} from "@fortawesome/free-solid-svg-icons";
 import {
   Nav,
   Card,
@@ -19,9 +7,8 @@ import {
   Button
 } from "@themesberg/react-bootstrap";
 import { Link } from "react-router-dom";
-
-// import { Routes as CustomRoutes } from "../../routes";
-import commands from "../../data/commands";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import  * as SolidIcons  from "@fortawesome/free-solid-svg-icons";
 import ConfirmationModal from "./ConfirmationModal";
 
 const calculateAge = (dateOfBirth) => {
@@ -278,6 +265,7 @@ export const EventTable = ({ events, onDeleteEvent, onEditEvent, handleToggleFea
               <th className="border-bottom">ticket quantity</th>
               <th className="border-bottom">ticket Price</th>
               <th className="border-bottom">Feature</th>
+              <th className="border-bottom">Events Attended</th>
               <th className="border-bottom">Action</th>
             </tr>
           </thead>
@@ -328,6 +316,9 @@ export const EventTable = ({ events, onDeleteEvent, onEditEvent, handleToggleFea
                   <td>{event.isFeatured ? "Featured" : "Not Featured"}</td>
                 )}
                 <td>
+                  <Link to={`/events-attendee/${event._id}`}>View Events</Link>
+                </td>
+                <td>
                   <Button
                     variant="outline-secondary"
                     className="m-1"
@@ -374,7 +365,7 @@ export const EventTable = ({ events, onDeleteEvent, onEditEvent, handleToggleFea
   );
 };
 
-export const EventAttendeTable = ({eventAttendeeData}) => {
+export const EventsAttendedByUser = ({eventAttendeeData}) => {
   
   return (
     <Card border="light" className="table-wrapper table-responsive shadow-sm mx-5 mb-5 ">
@@ -443,6 +434,74 @@ export const EventAttendeTable = ({eventAttendeeData}) => {
           </Nav>
           <small className="fw-bold">
             {/* Showing <b>{events.length}</b> out of <b>{events.length}</b> entries */}
+          </small>
+        </Card.Footer>
+      </Card.Body>
+    </Card>
+  );
+};
+
+export const EventAttendeTable  = ({eventAttendeeData}) => {
+  
+  return (
+    <Card border="light" className="table-wrapper table-responsive shadow-sm">
+      <Card.Body className="pt-0">
+        <Table hover className="user-table align-items-center">
+          <thead>
+            <tr>
+              <th className="border-bottom">#</th>
+              <th className="border-bottom">Attendee Name</th>
+              <th className="border-bottom">Attendee Age</th>
+              <th className="border-bottom">Contact Number</th>
+              <th className="border-bottom">Attendence Status</th>
+              <th className="border-bottom">Ticket Price</th>
+              <th className="border-bottom">Total Cost</th>
+              <th className="border-bottom">Payment Status</th>
+            </tr>
+          </thead>
+          <tbody>
+          {eventAttendeeData.map((event, index) => (
+              <tr key={event._id}>
+                <td>{index + 1}</td>
+                <td>
+                  <span className="fw-normal">{event.attendeeId.fullName}</span>
+                </td>
+                <td>
+                  <span className="fw-normal">{calculateAge(event.attendeeId.dateOfBirth)}</span>
+                </td>
+                <td>
+                  <span className="fw-normal">{event.attendeeId.contactNumber}</span>
+                </td>
+                <td>
+                  <span className="fw-normal">{event.attendanceStatus}</span>
+                </td>
+                <td>
+                  <span className="fw-normal">{event.ticketQuantity} x ₹{event.eventId.ticketPrice}</span>
+                </td>
+                <td>
+                  <span className="fw-normal">₹{event.totalCost}</span>
+                </td>
+                <td>
+                  <span className="fw-normal">{event.paymentId.paymentStatus ? event.paymentId.paymentStatus : "Not Paid"}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+        <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
+          <Nav>
+            <Pagination className="mb-2 mb-lg-0">
+              <Pagination.Prev>Previous</Pagination.Prev>
+              <Pagination.Item active>1</Pagination.Item>
+              <Pagination.Item>2</Pagination.Item>
+              <Pagination.Item>3</Pagination.Item>
+              <Pagination.Item>4</Pagination.Item>
+              <Pagination.Item>5</Pagination.Item>
+              <Pagination.Next>Next</Pagination.Next>
+            </Pagination>
+          </Nav>
+          <small className="fw-bold">
+            Showing <b>{eventAttendeeData.length}</b> out of <b>{eventAttendeeData.length}</b> entries
           </small>
         </Card.Footer>
       </Card.Body>

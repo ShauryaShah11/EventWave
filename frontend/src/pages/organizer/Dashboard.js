@@ -10,7 +10,6 @@ import {
 } from "@themesberg/react-bootstrap";
 
 import { CounterWidget } from "../../components/common/Widgets";
-import { trafficShares } from "../../data/charts";
 import { Routes as CustomRoutes } from "../../routes";
 import { useNavigate } from "react-router-dom";
 
@@ -56,7 +55,6 @@ const DashboardOverview = () => {
             title="50"
             period="Feb 1 - Apr 1"
             icon={faUsers}
-            data={trafficShares}
           />
         </Col>
       </Row>

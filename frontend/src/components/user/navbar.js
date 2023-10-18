@@ -32,6 +32,8 @@ function Navigation() {
                   type="text"
                   placeholder="Search events"
                   className="mr-2"
+                  value={searchQuery} // Connect to the state
+                  onChange={(e) => setSearchQuery(e.target.value)} // Update the state
                   style={{
                     borderRadius: "20px 0 0 20px",
                     paddingRight: "0",

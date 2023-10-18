@@ -1,0 +1,180 @@
+.event-details-container {
+  margin: 0;
+  padding: 20px;
+}
+
+.event-image {
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.event-card {
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.event-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.event-location {
+  font-size: 18px;
+  color: #888;
+}
+
+.event-description {
+  font-size: 16px;
+  color: #444;
+}
+
+.event-organizer {
+  font-size: 16px;
+  font-weight: bold;
+  color: #555;
+}
+
+.event-date {
+  font-size: 16px;
+  color: #555;
+}
+
+.event-price {
+  font-size: 16px;
+  color: #222;
+}
+
+.event-availability {
+  font-size: 16px;
+  color: #222;
+}
+
+.ticket-quantity {
+  margin-top: 10px;
+}
+
+.buy-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+}
+
+.sold-out {
+  background-color: #ccc;
+  color: #777;
+}
+
+.buy-button:hover {
+  background-color: #0056b3;
+  color: #fff;
+}
+
+.creative-review-input {
+  background: linear-gradient(135deg, #30cfe7, #1b64f2);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.creative-review-form {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: left;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.creative-review-title {
+  font-size: 24px;
+  color: #1b64f2;
+  margin-bottom: 20px;
+}
+
+.creative-textarea-container {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 20px;
+  transition: background 0.3s;
+}
+
+.creative-review-textarea {
+  width: 100%;
+  border: none;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 8px;
+  resize: none;
+  background: transparent;
+}
+
+.creative-review-textarea::placeholder {
+  color: black;
+}
+
+.creative-review-textarea:focus {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.creative-submit-button {
+  background: #1b64f2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.creative-submit-button:hover {
+  background: red;
+}
+
+.reviews-list {
+  background: #f7f7f7;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.review-item {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: box-shadow 0.3s;
+}
+
+.review-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.review-username {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.review-date {
+  font-size: 14px;
+  color: #888;
+}
+
+.review-text {
+  font-size: 16px;
+  color: #444;
+}

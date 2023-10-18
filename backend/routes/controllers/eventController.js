@@ -1,4 +1,6 @@
 import Event from "../../models/Event.js"; // Import your Event model
+import Attendee from "../../models/Attendee.js"; 
+import Organizer from "../../models/Organizer.js";
 import Address from "../../models/Address.js";
 import EventAttendees from "../../models/EventAttendees.js";
 import PaymentTransactions from "../../models/PaymentTransactions.js";
@@ -13,7 +15,7 @@ const eventController = {
     async (req, res) => {
       try {
         const {
-          organizerId,
+          userId,
           eventName,
           eventDescription,
           eventDate,
@@ -28,6 +30,9 @@ const eventController = {
 
         const images = req.files.map((file) => file.filename);
 
+        const organizer = await Organizer.findOne({ userId: userId });
+
+        const organizerId = organizer._id;
         // Create a new address
         const newAddress = new Address({
           street,
@@ -214,8 +219,12 @@ const eventController = {
   enrollUserInEvent: async (req, res) => {
     try {
       const eventId = req.body.eventId;
-      const attendeeId = req.body.userId;
+      const userId = req.body.userId;
       const ticketQuantity = req.body.ticketQuantity;
+
+      const attendee = await Attendee.findOne({userId:userId});
+
+      const attendeeId = attendee._id;
   
       const event = await Event.findOne({ _id: eventId });
       if (event.ticketQuantity < ticketQuantity) {
@@ -257,8 +266,10 @@ const eventController = {
   getEventsAttendedByUser: async (req, res) => {
     try {
       const userId = req.params.userId;
-  
-      const attendedEvents = await EventAttendees.find({ attendeeId: userId })
+      const attendee = await Attendee.findOne({userId:userId});
+      
+      
+      const attendedEvents = await EventAttendees.find({ attendeeId: attendee._id })
         .populate({ path: 'eventId' , populate: { path: 'eventAddress' } });
 
         const eventsWithPaymentStatus = await Promise.all(
@@ -289,6 +300,36 @@ const eventController = {
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Failed to retrieve events attended by the user' });
+    }
+  },
+
+
+  getAttendeesByEventId: async (req, res) => {
+    const eventId = req.params.eventId;
+    try {
+        const eventAttendees = await EventAttendees.find({ eventId: eventId })
+            .populate([
+                {
+                    path: 'attendeeId',
+                    model: Attendee, // Provide the Attendee model
+                    select: 'fullName contactNumber dateOfBirth profilePicture'
+                },
+                {
+                  path: 'eventId',
+                  model: Event, // Provide the Attendee model
+                  select: 'eventName ticketPrice'
+                },
+                {
+                    path: 'paymentId',
+                    model: PaymentTransactions, // Provide the Payment model
+                    select: 'paymentDate paymentStatus'
+                }
+            ]);
+
+        return res.json(eventAttendees);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to fetch event attendees' });
     }
   },
 
