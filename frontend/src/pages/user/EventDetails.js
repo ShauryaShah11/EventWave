@@ -8,24 +8,20 @@ import {
   Button,
   Carousel,
   Image,
-  Form,
-  ListGroup,
-  Badge
+  Form
 } from "react-bootstrap";
 import { Routes as CustomRoutes } from "../../routes.js";
 import jwt_decode from "jwt-decode";
-import PaymentModal from "../../components/common/PaymentModal";
 import ReviewSection from "../../components/user/ReviewSection";
+import axios from "axios";
 import "./EventDetails.css";
 
 function EventDetails() {
   const [eventData, setEventData] = useState(null);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [ticketQuantity, setTicketQuantity] = useState(1);
   const [errorMessage, setErrorMessage] = useState(null);
 
   const [reviews, setReviews] = useState([]);
-
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -34,42 +30,6 @@ function EventDetails() {
   const decodedToken = jwt_decode(userToken);
 
   const navigate = useNavigate();
-
-  const handlePayment = async () => {
-    const decodedToken = jwt_decode(userToken);
-    try {
-      const paymentResponse = await fetch(
-        "http://localhost:8000/payments/payment-confirm",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userToken}`
-          },
-          body: JSON.stringify({
-            eventId: eventId,
-            userId: decodedToken.userId,
-            amount: eventData.ticketPrice,
-            cardDetails: {
-              /* Add card details here */
-            }
-          })
-        }
-      );
-
-      const responseData = await paymentResponse.json();
-
-      if (paymentResponse.ok && responseData.success) {
-        return { success: true, message: "Payment was successful" };
-      } else {
-        setErrorMessage(responseData.message || "Payment failed");
-        return { success: false, message: "Payment failed" };
-      }
-    } catch (error) {
-      setErrorMessage("Payment failed due to an error");
-      return { success: false, message: "Payment failed due to an error" };
-    }
-  };
 
   const handleTicketQuantityChange = (event) => {
     const quantity = parseInt(event.target.value, 10);
@@ -110,29 +70,31 @@ function EventDetails() {
   };
 
   const submitReview = async (rating, comment) => {
-    if(!userToken){
+    if (!userToken) {
       navigate(CustomRoutes.Signin.path);
     }
     try {
-      const response = await fetch(`http://localhost:8000/event-feedback/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          eventId: eventId,
-          userId: decodedToken.userId,
-          rating: rating,
-          comment: comment
-        })
-      });
+      const response = await fetch(
+        `http://localhost:8000/event-feedback/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            eventId: eventId,
+            userId: decodedToken.userId,
+            rating: rating,
+            comment: comment
+          })
+        }
+      );
 
       if (!response.ok) {
         throw Error("Network response was not ok");
-      }else{
+      } else {
         alert("Feedback submitted successfully!");
       }
-      
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -142,12 +104,15 @@ function EventDetails() {
   const fetchReviews = async (eventId) => {
     // In this dummy implementation, we set some example reviews.
     try {
-      const response = await fetch(`http://localhost:8000/event-feedback/${eventId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
+      const response = await fetch(
+        `http://localhost:8000/event-feedback/${eventId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
         }
-      });
+      );
 
       if (!response.ok) {
         throw Error("Network response was not ok");
@@ -187,25 +152,79 @@ function EventDetails() {
     }
   }, [eventId]);
 
-  const handleBuyTickets = () => {
-    if (!userToken) {
-      navigate(CustomRoutes.Signin.path);
-    }
-    setShowPaymentModal(true);
+  const checkoutHandler = async () => {
+    const {
+      data: { key }
+    } = await axios.get("http://localhost:8000/api/getkey");
+    const totalAmount = eventData.ticketPrice * ticketQuantity;
+    const {
+      data: { order }
+    } = await axios.post("http://localhost:8000/payments/checkout", {
+      amount: totalAmount
+    });
+
+    console.log(order);
+    const { data } = await axios.get(
+      `http://localhost:8000/users/info/${decodedToken.userId}`
+    );
+    const options = {
+      key,
+      amount: order.amount,
+      currency: "INR",
+      name: data.fullName,
+      description: "RazorPay Payment",
+      order_id: order.id,
+      "handler": function (response){
+        axios.post('http://localhost:8000/payments/paymentverification', {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+            userId:decodedToken.userId,
+            eventId
+            // Add other required data
+        })
+        .then((serverResponse) => {
+            // Handle the server's response
+            console.log('Server response:', serverResponse);
+            // After this, you can trigger other actions or handle the UI as needed
+            handleRegistration();
+        })
+        .catch((error) => {
+            console.error('Error while making the POST request:', error);
+            // Handle the error gracefully
+        });
+
+      },
+      prefill: {
+        name: data.fullName,
+        email: data.userId.email,
+        contact: data.contactNumber
+      },
+      notes: {
+        address: "Razorpay Corporate Office"
+      },
+      theme: {
+        color: "#050213"
+      },
+      redirect: true
+    };
+    const razor = new window.Razorpay(options);
+
+    razor.on('payment.error', function(response) {
+      // Handle payment error here
+      console.log('Payment error:', response);
+    });
+
+    razor.open();
   };
 
-  const handlePaymentSuccess = async () => {
-    const paymentResult = await handlePayment();
-
-    if (paymentResult.success) {
-      const registrationResult = await registerUserToEvent(
-        eventId,
-        decodedToken.userId
-      );
-
-      if (registrationResult) {
-        setShowPaymentModal(false);
-      }
+  const handleRegistration = async () => {
+    const registrationResult = await registerUserToEvent(eventId, decodedToken.userId);
+  
+    if (registrationResult) {
+      alert("Successfully registered");
+    } else {
+      alert("Registration failed");
     }
   };
 
@@ -269,7 +288,7 @@ function EventDetails() {
                       variant="primary"
                       block
                       className="mt-4 buy-button"
-                      onClick={handleBuyTickets}
+                      onClick={() => checkoutHandler()}
                     >
                       Buy Tickets
                     </Button>
@@ -292,13 +311,7 @@ function EventDetails() {
         <p>Loading...</p>
       )}
 
-      <ReviewSection reviews={reviews} handleReview={submitReview}/>   
-
-      <PaymentModal
-        showPaymentModal={showPaymentModal}
-        handlePaymentSuccess={handlePaymentSuccess}
-        errorMessage={errorMessage}
-      />
+      <ReviewSection reviews={reviews} handleReview={submitReview} />
     </Container>
   );
 }

@@ -70,7 +70,7 @@ function Navigation() {
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <Dropdown.Item>Profile</Dropdown.Item>
-                        <Dropdown.Item onClick={() => navigate(CustomRoutes.EventAttendee.path)}>
+                        <Dropdown.Item onClick={() => navigate(CustomRoutes.AttendeeEvents.path)}>
                           My Events
                         </Dropdown.Item>
 

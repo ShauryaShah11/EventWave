@@ -75,15 +75,15 @@ const userController = {
         .populate('userId', 'email username password')
         .select('fullName dateOfBirth contactNumber');
   
-      res.json(attendeesWithUserDetails);
+      return res.json(attendeesWithUserDetails);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 
   async getUser(req, res) {
-    const attendeeId = req.params.id; // Use req, not request
+    const attendeeId = req.params.id; 
     try {
       const attendeeWithUserDetails = await Attendee.findById(attendeeId)
         .populate('userId', 'email username password')
@@ -93,12 +93,34 @@ const userController = {
         return res.status(404).json({ error: 'Attendee not found' });
       }
   
-      res.json(attendeeWithUserDetails);
+      return res.json(attendeeWithUserDetails);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
   },  
+
+  async getUserById(req, res) {
+    const userId = req.params.id; 
+    try {
+      const attendee = await Attendee.findOne({userId:userId});
+
+      const attendeeId = attendee._id;
+
+      const user = await Attendee.findById(attendeeId)
+        .populate('userId', 'email username password')
+        .select('fullName dateOfBirth contactNumber');
+  
+      if (!user) {
+        return res.status(404).json({ error: 'Attendee not found' });
+      }
+  
+      return res.json(user);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
 
   async updateUser(req, res){
     try{
@@ -147,7 +169,7 @@ const userController = {
 
       await user.save();
 
-      res.status(200).json({ message: 'Attendee and User updated successfully' });
+      return res.status(200).json({ message: 'Attendee and User updated successfully' });
     }catch(error){
       return res.status(500).json({ error: 'Failed to Update attendee.' });
     }

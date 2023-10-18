@@ -1,41 +1,68 @@
-import eventController  from './eventController.js'; // Import the appropriate path
-import PaymentTransactions from '../../models/PaymentTransactions.js';
-// paymentController.js
+import PaymentTransactions from "../../models/PaymentTransactions.js";
+import Attendee from "../../models/Attendee.js";
+import crypto from "crypto";
+import { instance } from "../../index.js";
+
 const paymentController = {
-  createPaymentTransaction: async (req, res) => {
-    try {
-      // Extract relevant data from the request body sent by the frontend
-      const { eventId, userId, amount, cardDetails } = req.body;
-  
-      // Create a new payment transaction record
-      
-      const paymentTransaction = new PaymentTransactions({
-        eventId, // Event ID
-        attendeeId: userId, // User ID
-        paymentDate: new Date(),
-        paymentStatus: 'completed', // You can set this to 'completed' if the payment was successful
-      });
-  
-      // Save the payment transaction to your database
-      const savedPayment = await paymentTransaction.save();
-  
-      // Respond to the frontend with a success message
-      res.json({ success: true, message: 'Payment transaction created successfully' });
-    } catch (error) {
-      console.error('Error creating payment transaction:', error);
-      // Respond with an error message
-      res.status(500).json({ success: false, message: 'Error creating payment transaction' });
-    }
-  
+  checkout: async (req, res) => {
+    const options = {
+      amount: Number(req.body.amount * 100),
+      currency: "INR"
+    };
+    const order = await instance.orders.create(options);
+
+    res.status(200).json({
+      success: true,
+      order
+    });
   },
-  
-    updatePaymentStatus: async (req, res) => {
-      // Update the payment status based on request data
-      // Handle error cases and send appropriate responses
-    },
-  
-    // Other payment-related functions...
-  };
-  
-  export default paymentController;
-  
+
+  paymentVerification: async (req, res) => {
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      userId,
+      eventId
+    } = req.body;
+
+
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_APT_SECRET)
+      .update(body.toString())
+      .digest("hex");
+
+    const isAuthentic = expectedSignature === razorpay_signature;
+
+    if (isAuthentic) {
+      // Database comes here
+
+      const attendee = await Attendee.findOne({ userId: userId });
+
+      const attendeeId = attendee._id;
+
+      await PaymentTransactions.create({
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+        paymentStatus: "completed",
+        paymentDate: new Date(),
+        attendeeId,
+        eventId
+      });
+
+      res.json({
+        success: true,
+        message: "Payment transaction created successfully"
+      });
+    } else {
+      res.status(500).json({
+        success: false
+      });
+    }
+  }
+};
+
+export default paymentController;

@@ -5,8 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import fs from 'fs/promises'; // Import the 'fs' module with promises support
-
+import Razorpay from "razorpay";
 // Import your routes and data models here
 import userRoutes from './routes/api/userRoutes.js';
 import eventRoutes from './routes/api/eventRoutes.js';
@@ -15,6 +14,7 @@ import eventFeedbackRoutes from './routes/api/eventFeedbackRoutes.js';
 import paymentRoutes from './routes/api/paymentRoutes.js';
 import passwordResetRoutes from './routes/api/passwordResetRoutes.js';
 import revenueRoutes from './routes/api/revenueRoutes.js';
+
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -30,7 +30,7 @@ app.use(cors());
 
 // Parse JSON requests
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 // Connect to MongoDB Atlas
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -45,6 +45,11 @@ mongoose
     console.error('Error connecting to MongoDB:', error);
   });
 
+export const instance = new Razorpay({
+    key_id: process.env.RAZORPAY_API_KEY,
+    key_secret: process.env.RAZORPAY_APT_SECRET,
+});
+
 // Serve images from the specified directory
 const imagesDirectory = join(__dirname, 'uploads');
 app.use('/images', express.static(imagesDirectory));
@@ -57,6 +62,10 @@ app.use('/event-feedback', eventFeedbackRoutes);
 app.use('/payments', paymentRoutes);
 app.use('/password-reset', passwordResetRoutes);
 app.use('/revenue', revenueRoutes);
+
+app.get("/api/getkey", (req, res) =>
+  res.status(200).json({ key: process.env.RAZORPAY_API_KEY })
+);
 
 app.get('/', (req, res) => {
   res.send('Welcome to the Event Management System API');

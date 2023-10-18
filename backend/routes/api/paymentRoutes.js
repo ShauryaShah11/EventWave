@@ -5,8 +5,8 @@ import { verifyToken } from '../../config/middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/payment-confirm', verifyToken, paymentController.createPaymentTransaction);
-router.put('/:id', paymentController.updatePaymentStatus);
+router.post('/checkout',  paymentController.checkout);
+router.post('/paymentverification', paymentController.paymentVerification);
 // Other payment-related routes...
 
 export default router;
