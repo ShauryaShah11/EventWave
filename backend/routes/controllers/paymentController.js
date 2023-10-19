@@ -22,10 +22,7 @@ const paymentController = {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
-      userId,
-      eventId
     } = req.body;
-
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
 
@@ -39,22 +36,17 @@ const paymentController = {
     if (isAuthentic) {
       // Database comes here
 
-      const attendee = await Attendee.findOne({ userId: userId });
-
-      const attendeeId = attendee._id;
-
-      await PaymentTransactions.create({
+      const payment = await PaymentTransactions.create({
         razorpay_order_id,
         razorpay_payment_id,
         razorpay_signature,
         paymentStatus: "completed",
         paymentDate: new Date(),
-        attendeeId,
-        eventId
       });
 
       res.json({
         success: true,
+        paymentId: payment._id,
         message: "Payment transaction created successfully"
       });
     } else {

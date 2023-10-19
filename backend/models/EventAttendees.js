@@ -28,6 +28,9 @@ const eventAttendeesSchema = new mongoose.Schema({
     totalCost: {
         type: Number, // Store the total cost of the event for this attendee
     },
+    registrationDate: {
+        type: Date, // Add a new field for registration date
+    }
 });
 
 const EventAttendees = mongoose.model('EventAttendees', eventAttendeesSchema);

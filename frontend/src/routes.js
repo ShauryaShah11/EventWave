@@ -25,15 +25,21 @@ export const Routes = {
 
     // organizer paths
     OrganizerDashboard: { path: "/organizer/dashboard" },
+    OrganizerSignup: { path: "/organizer/sign-up" },
     AddEvents: { path: "/organizer/events/add" },
     EventList: { path: "/organizer/events" },
-    EditEvent : { path: "/organizer/edit-event"},    
+    EditEvent : { path: "/organizer/edit-event"}, 
+    ManageProfile : { path: "/organizer/my-profile"},    
+
 
     // user paths
     Events: { path: "/events" },
     EventDetails: { path: "/events-details" },
     AttendeeEvents: { path: "/my-events"},
     EventAttendee: { path: "/events-attendee/:eventId"}, 
+    MyProfile: { path: "/my-profile"}, 
+    Search: {path: "/search"},
+
 
 
 };

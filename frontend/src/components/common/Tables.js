@@ -189,7 +189,7 @@ export const OrganizerTable = ({
                   <Button
                     variant="outline-secondary"
                     className="m-1"
-                    onClick={() => onUpdateOrganizer(organizer._id)}
+                    onClick={() => onUpdateOrganizer(organizer.userId._id)}
                   >
                     Edit
                   </Button>

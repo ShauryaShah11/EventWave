@@ -15,16 +15,6 @@ const paymentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    eventId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Event', // Reference the 'Event' model
-        required: true,
-    },
-    attendeeId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Attendee', // Reference the 'Attendee' model
-        required: true,
-    },
     paymentDate: {
         type: Date,
     },

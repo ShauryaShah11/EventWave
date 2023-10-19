@@ -1,53 +1,41 @@
-import EventFeedback from '../../models/EventFeedback.js'; // Import your EventFeedback model
-import PaymentTransactions from '../../models/PaymentTransactions.js';
 import EventAttendees from '../../models/EventAttendees.js';
 
 const revenueController = {
-  
+  getRevenueByMonth: async (req, res) => {
+    try {
+      const twelveMonthsAgo = new Date(); // Start from today
+      twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12); // Go back 12 months
 
-    async getRevenueByMonth(req, res) {
-  try {
-    const revenueData = await EventAttendees.aggregate([
-      {
-        $addFields: {
-          convertedPaymentId: { $toObjectId: "$paymentId" }
-        }
-      },
-      {
-        $lookup: {
-          from: 'PaymentTransactions',
-          localField: 'convertedPaymentId',
-          foreignField: '_id',
-          as: 'paymentInfo',
+      const revenueByMonth = await EventAttendees.aggregate([
+        {
+          $match: {
+            registrationDate: { $gte: twelveMonthsAgo, $lte: new Date() }, // Filter records for the last 12 months
+            attendanceStatus: 'attending', // Consider only attending attendees
+          },
         },
-      },
-      { $unwind: '$paymentInfo' },
-      {
-        $match: {
-          attendanceStatus: 'attending',
+        {
+          $group: {
+            _id: {
+              year: { $year: "$registrationDate" },
+              month: { $month: "$registrationDate" },
+            },
+            totalRevenue: { $sum: "$totalCost" }, // Sum the revenue for each month
+          },
         },
-      },
-      {
-        $group: {
-          _id: { $dateToString: { format: '%Y-%m', date: '$paymentInfo.paymentDate' } },
-          totalRevenue: { $sum: '$totalCost' },
+        {
+          $sort: {
+            "_id.year": 1,
+            "_id.month": 1,
+          },
         },
-      },
-    ]);
+      ]);
 
-    res.json(revenueData);
-  } catch (error) {
-    console.error('Error fetching revenue data:', error);
-    res.status(500).json({ error: 'An error occurred while fetching revenue data' });
-  }
-}
-
-        
-      
-      
-      
-
-  // Add more controller functions for updating and deleting feedback as needed
+      res.json(revenueByMonth);
+    } catch (error) {
+      console.error('Error fetching revenue data:', error);
+      res.status(500).json({ error: 'An error occurred while fetching revenue data' });
+    }
+  },
 };
 
 export default revenueController;

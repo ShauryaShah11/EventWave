@@ -175,6 +175,61 @@ const userController = {
     }
   },
 
+  async updateUserById(req, res){
+    try{
+      const userId = req.params.id;
+      const { username, email, fullName, contactNumber, dateOfBirth } = req.body;
+
+      const attendeeData = await Attendee.findOne({userId:userId});
+
+      const attendeeId = attendeeData._id;
+      // Update the Attendee
+      const attendee = await Attendee.findByIdAndUpdate(
+        attendeeId,
+        {
+          fullName,
+          dateOfBirth,
+          contactNumber,
+        },
+        { new: true }
+      );
+
+      if (!attendee) {
+        return res.status(404).json({ error: 'Attendee not found' });
+      }
+
+      // Find the User associated with the Attendee
+      const user = await User.findById(attendee.userId);
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      // Check if email already exists in the database
+      const existingEmailUser = await User.findOne({ email });
+
+      if (existingEmailUser && existingEmailUser._id.toString() !== user._id.toString()) {
+        return res.status(400).json({ error: 'Email already exists' });
+      }
+
+      // Check if contact number already exists in the database
+      const existingContactNumberUser = await User.findOne({ contactNumber });
+
+      if (existingContactNumberUser && existingContactNumberUser._id.toString() !== user._id.toString()) {
+        return res.status(400).json({ error: 'Contact number already exists' });
+      }
+      
+      // Update the User
+      user.username = username;
+      user.email = email;
+
+      await user.save();
+
+      return res.status(200).json({ message: 'Attendee and User updated successfully' });
+    }catch(error){
+      return res.status(500).json({ error: 'Failed to Update attendee.' });
+    }
+  },
   async removeUser(req, res) {
     try {
       const attendeeId = req.params.id;

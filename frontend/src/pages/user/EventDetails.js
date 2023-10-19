@@ -26,8 +26,6 @@ function EventDetails() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const eventId = searchParams.get("id");
-  const userToken = localStorage.getItem("userToken");
-  const decodedToken = jwt_decode(userToken);
 
   const navigate = useNavigate();
 
@@ -38,7 +36,9 @@ function EventDetails() {
     }
   };
 
-  const registerUserToEvent = async (eventId, userId) => {
+  const registerUserToEvent = async (eventId, userId, paymentId) => {
+    const userToken = localStorage.getItem("userToken");
+    const decodedToken = jwt_decode(userToken);
     try {
       const registrationResponse = await fetch(
         "http://localhost:8000/events/enrollment",
@@ -51,6 +51,7 @@ function EventDetails() {
           body: JSON.stringify({
             eventId,
             userId,
+            paymentId,
             ticketQuantity
           })
         }
@@ -70,6 +71,8 @@ function EventDetails() {
   };
 
   const submitReview = async (rating, comment) => {
+    const userToken = localStorage.getItem("userToken");
+    const decodedToken = jwt_decode(userToken);
     if (!userToken) {
       navigate(CustomRoutes.Signin.path);
     }
@@ -153,74 +156,90 @@ function EventDetails() {
   }, [eventId]);
 
   const checkoutHandler = async () => {
-    const {
-      data: { key }
-    } = await axios.get("http://localhost:8000/api/getkey");
-    const totalAmount = eventData.ticketPrice * ticketQuantity;
-    const {
-      data: { order }
-    } = await axios.post("http://localhost:8000/payments/checkout", {
-      amount: totalAmount
-    });
+    if (!localStorage.getItem("userToken")) {
+      navigate(CustomRoutes.Signin.path);
+    } else {
+      const userToken = localStorage.getItem("userToken");
+      const decodedToken = jwt_decode(userToken);
 
-    console.log(order);
-    const { data } = await axios.get(
-      `http://localhost:8000/users/info/${decodedToken.userId}`
-    );
-    const options = {
-      key,
-      amount: order.amount,
-      currency: "INR",
-      name: data.fullName,
-      description: "RazorPay Payment",
-      order_id: order.id,
-      "handler": function (response){
-        axios.post('http://localhost:8000/payments/paymentverification', {
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_signature: response.razorpay_signature,
-            userId:decodedToken.userId,
-            eventId
-            // Add other required data
-        })
-        .then((serverResponse) => {
-            // Handle the server's response
-            console.log('Server response:', serverResponse);
-            // After this, you can trigger other actions or handle the UI as needed
-            handleRegistration();
-        })
-        .catch((error) => {
-            console.error('Error while making the POST request:', error);
-            // Handle the error gracefully
-        });
+      const {
+        data: { key }
+      } = await axios.get("http://localhost:8000/api/getkey");
+      const totalAmount = eventData.ticketPrice * ticketQuantity;
+      const {
+        data: { order }
+      } = await axios.post("http://localhost:8000/payments/checkout", {
+        amount: totalAmount
+      });
 
-      },
-      prefill: {
+      console.log(order);
+      const { data } = await axios.get(
+        `http://localhost:8000/users/info/${decodedToken.userId}`
+      );
+      const options = {
+        key,
+        amount: order.amount,
+        currency: "INR",
         name: data.fullName,
-        email: data.userId.email,
-        contact: data.contactNumber
-      },
-      notes: {
-        address: "Razorpay Corporate Office"
-      },
-      theme: {
-        color: "#050213"
-      },
-      redirect: true
-    };
-    const razor = new window.Razorpay(options);
+        description: "RazorPay Payment",
+        order_id: order.id,
+        handler: function (response) {
+          axios
+            .post("http://localhost:8000/payments/paymentverification", {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature
+              // Add other required data
+            })
+            .then((serverResponse) => {
+              // Handle the server's response
+              console.log("Server response:", serverResponse);
+              // After this, you can trigger other actions or handle the UI as needed
+              console.log("Payment Id:", serverResponse.data.paymentId);
 
-    razor.on('payment.error', function(response) {
-      // Handle payment error here
-      console.log('Payment error:', response);
-    });
+              handleRegistration(serverResponse.data.paymentId);
+            })
+            .catch((error) => {
+              console.error("Error while making the POST request:", error);
+              // Handle the error gracefully
+            });
+        },
+        prefill: {
+          name: data.fullName,
+          email: data.userId.email,
+          contact: data.contactNumber
+        },
+        notes: {
+          address: "Razorpay Corporate Office"
+        },
+        theme: {
+          color: "#050213"
+        },
+        redirect: true
+      };
+      const razor = new window.Razorpay(options);
 
-    razor.open();
+      razor.on("payment.error", function (response) {
+        // Handle payment error here
+        console.log("Payment error:", response);
+      });
+
+      razor.open();
+    }
   };
 
-  const handleRegistration = async () => {
-    const registrationResult = await registerUserToEvent(eventId, decodedToken.userId);
-  
+  const handleRegistration = async (paymentId) => {
+    const userToken = localStorage.getItem("userToken");
+    if (!userToken) {
+      navigate(CustomRoutes.Signin.path);
+    }
+    const decodedToken = jwt_decode(userToken);
+    const registrationResult = await registerUserToEvent(
+      eventId,
+      decodedToken.userId,
+      paymentId
+    );
+
     if (registrationResult) {
       alert("Successfully registered");
     } else {

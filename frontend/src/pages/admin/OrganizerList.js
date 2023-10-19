@@ -63,7 +63,6 @@ const OrganizerList = () => {
   }, []);
   const handleUpdateOrganizer = (organizerId) => {
     navigate(CustomRoutes.EditOrganizer.path + `?id=${organizerId}`);
-
     
   };
 

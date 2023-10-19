@@ -5,7 +5,7 @@ import { Routes as CustomRoutes } from "./routes";
 // Admin Components
 import DashboardOverview from "./pages/admin/Dashboard";
 import AdminSidebar from "./components/admin/Sidebar";
-import Navbar from "./components/common/Navbar";
+import AdminNavbar from "./components/admin/Navbar";
 import Footer from "./components/common/Footer";
 import Preloader from "./components/common/Preloader";
 import AttendeeList from "./pages/admin/AttendeeList";
@@ -25,10 +25,13 @@ import ServerError from "./pages/common/ServerError";
 
 // Organizer Components
 import OrganizerSidebar from "./components/organizer/Sidabar";
+import OrganizerNavbar from "./components/organizer/Navbar";
 import OrganizerDashboard from "./pages/organizer/Dashboard";
 import AddEvent from "./pages/organizer/AddEvent";
 import EventList from "./pages/organizer/EventList";
 import EditEvent from "./pages/organizer/EditEvent";
+import ManageProfile from "./pages/organizer/ManageProfile";
+import OrganizerSignup from "./pages/organizer/SignUp";
 
 // Users Components
 import NavBar from './components/user/navbar';
@@ -38,6 +41,8 @@ import EventDetails from './pages/user/EventDetails';
 import UserFooter from './components/user/Footer';
 import AttendeeEventsList from "./pages/user/UserEvent";
 import EventAttendeeList from "./pages/common/EventAttendee";
+import MyProfile from "./pages/user/ManageProfile";
+import SearchResult from "./pages/user/SearchResults";
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -57,28 +62,17 @@ const RouteWithAdminSidebar = ({ component: Component, ...rest }) => {
   useEffect(() => {
     const timer = setTimeout(() => setLoaded(true), 1000);
     return () => clearTimeout(timer);
-  }, []);
-
-  const localStorageIsSettingsVisible = () => {
-    return localStorage.getItem('settingsVisible') === 'false' ? false : true;
-  };
-
-  const [showSettings, setShowSettings] = useState(localStorageIsSettingsVisible);
-
-  const toggleSettings = () => {
-    setShowSettings(!showSettings);
-    localStorage.setItem('settingsVisible', !showSettings);
-  };
+  }, []);   
 
   return (
       <>
       <Preloader show={loaded ? false : true} />
         <AdminSidebar />
         <div className="content">
-          <Navbar />
+          <AdminNavbar />
           <main>
             <Component {...rest} />
-            <Footer toggleSettings={toggleSettings} showSettings={showSettings} />
+            <Footer />
           </main>
         </div>
       </>
@@ -93,26 +87,15 @@ const RouteWithOrganizerSidebar = ({ component: Component, ...rest }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const localStorageIsSettingsVisible = () => {
-    return localStorage.getItem('settingsVisible') === 'false' ? false : true;
-  };
-
-  const [showSettings, setShowSettings] = useState(localStorageIsSettingsVisible);
-
-  const toggleSettings = () => {
-    setShowSettings(!showSettings);
-    localStorage.setItem('settingsVisible', !showSettings);
-  };
-
   return (
       <>
       <Preloader show={loaded ? false : true} />
         <OrganizerSidebar />
         <div className="content">
-          <Navbar />
+          <OrganizerNavbar />
           <main>
             <Component {...rest} />
-            <Footer toggleSettings={toggleSettings} showSettings={showSettings} />
+            <Footer />
           </main>
         </div>
       </>
@@ -126,17 +109,6 @@ const RouteWithNavBar = ({ component: Component, ...rest }) => {
     const timer = setTimeout(() => setLoaded(true), 1000);
     return () => clearTimeout(timer);
   }, []);
-
-  const localStorageIsSettingsVisible = () => {
-    return localStorage.getItem('settingsVisible') === 'false' ? false : true;
-  };
-
-  const [showSettings, setShowSettings] = useState(localStorageIsSettingsVisible);
-
-  const toggleSettings = () => {
-    setShowSettings(!showSettings);
-    localStorage.setItem('settingsVisible', !showSettings);
-  };
 
   return (
       <>
@@ -158,6 +130,11 @@ const HomePage =  () => (
       exact
       path={CustomRoutes.Signin.path}
       element={<RouteWithLoader component={Signin} />}
+    />
+    <Route
+      exact
+      path={CustomRoutes.OrganizerSignup.path}
+      element={<RouteWithLoader component={OrganizerSignup} />}
     />
     <Route
       exact
@@ -246,6 +223,16 @@ const HomePage =  () => (
       path={CustomRoutes.EditEvent.path}
       element={<RouteWithOrganizerSidebar component={EditEvent} />}
     />
+    <Route
+      exact
+      path={CustomRoutes.ManageProfile.path}
+      element={<RouteWithOrganizerSidebar component={ManageProfile} />}
+    />
+    <Route
+      exact
+      path={CustomRoutes.EventAttendee.path}
+      element={<RouteWithOrganizerSidebar component={EventAttendeeList} />}
+    />
 
     {/* Users Routes */}
     <Route
@@ -270,8 +257,13 @@ const HomePage =  () => (
     />
     <Route
       exact
-      path={CustomRoutes.EventAttendee.path}
-      element={<RouteWithOrganizerSidebar component={EventAttendeeList} />}
+      path={CustomRoutes.MyProfile.path}
+      element={<RouteWithNavBar component={MyProfile} />}
+    />
+    <Route
+      exact
+      path={CustomRoutes.Search.path}
+      element={<RouteWithNavBar component={SearchResult} />}
     />
 
     <Route path="*" element={<NotFoundPage />} />

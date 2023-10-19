@@ -1,31 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileAlt, faPlus, faRocket } from "@fortawesome/free-solid-svg-icons";
-import { Col, Row, Button, Dropdown } from "@themesberg/react-bootstrap";
-import { EditAttendeeForm } from "../../components/admin/Forms";
+import React, { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { Col, Row } from "@themesberg/react-bootstrap";
+import { EditAttendeeForm } from "../../components/user/Forms";
 import { Routes as CustomRoutes } from "../../routes";
+import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
 
-const EditAttendee = () => {
+const ManageProfile = () => {
   const [userData, setUserData] = useState();
   const [errorMessage, setErrorMessage] = useState(null);
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const attendeeId = searchParams.get("id");
-  const token = localStorage.getItem("adminToken");
+  
+  const token = localStorage.getItem("userToken");
+  const decodedToken = jwt_decode(token);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/users/${attendeeId}`,
+        `http://localhost:8000/users/info/${decodedToken.userId}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`, // Include the token in the request headers
-          }
+          },
         }
       );
 
@@ -37,12 +35,12 @@ const EditAttendee = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
+  }, [decodedToken.userId, token]);
 
   const updateAttendee = async (attendeeData) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/users/${attendeeId}`,
+        `http://localhost:8000/users/update/${decodedToken.userId}`,
         {
           method: "PUT", // Use 'PUT' method to update the attendee
           headers: {
@@ -62,7 +60,8 @@ const EditAttendee = () => {
         throw new Error("Network response was not ok");
       }
       else{
-        navigate(CustomRoutes.AttendeeList.path);
+        alert("Profile successfully updated")
+        navigate(CustomRoutes.Home.path)
       }
     } catch (error) {
       // Handle errors, e.g., show an error message or log the error
@@ -72,32 +71,10 @@ const EditAttendee = () => {
 
   useEffect(() => {
     fetchData();
-  }, [attendeeId]);
+  }, [fetchData]);
 
   return (
     <>
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-        <Dropdown>
-          <Dropdown.Toggle
-            as={Button}
-            variant="secondary"
-            className="text-dark me-2"
-          >
-            <FontAwesomeIcon icon={faPlus} className="me-2" />
-            <span>New</span>
-          </Dropdown.Toggle>
-          <Dropdown.Menu className="dashboard-dropdown dropdown-menu-left mt-2">
-            <Dropdown.Item>
-              <FontAwesomeIcon icon={faFileAlt} className="me-2" /> Document
-            </Dropdown.Item>
-            <Dropdown.Item>
-              <FontAwesomeIcon icon={faRocket} className="text-danger me-2" />{" "}
-              Subscription Plan
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      </div>
-
       <Row>
         <Col xs={12} xl={12}>
           <EditAttendeeForm attendee={userData} onUpdate={updateAttendee} errorMessage={errorMessage}/>
@@ -107,4 +84,4 @@ const EditAttendee = () => {
   );
 };
 
-export default EditAttendee;
+export default ManageProfile;

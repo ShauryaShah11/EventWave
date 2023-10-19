@@ -39,8 +39,12 @@ const organizerController = {
     
     // Get organizer details by ID
     async getOrganizerById(req, res)  {
-      const organizerId = req.params.id;
+
+      const userId = req.params.id;
       try {
+        const organizer = await Organizer.findOne({userId:userId});
+
+        const organizerId = organizer._id;
         const organizerWithUserDetails = await Organizer.findById(organizerId)
           .populate('userId', 'email username')
           .select('companyName companyAddress contactNumber');
@@ -59,8 +63,12 @@ const organizerController = {
     // Update organizer details by ID
     async updateOrganizer(req, res) {
       try {
-        const organizerId = req.params.id;
+        const userId = req.params.id;
         const { username, email, companyName, companyAddress, contactNumber } = req.body;
+
+        const organizerData = await Organizer.findOne({userId:userId});
+
+        const organizerId = organizerData._id;
     
         // Fetch the Organizer document
         const organizer = await Organizer.findByIdAndUpdate(

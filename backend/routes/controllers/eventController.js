@@ -221,6 +221,7 @@ const eventController = {
       const eventId = req.body.eventId;
       const userId = req.body.userId;
       const ticketQuantity = req.body.ticketQuantity;
+      const paymentId = req.body.paymentId;
 
       const attendee = await Attendee.findOne({userId:userId});
 
@@ -231,16 +232,6 @@ const eventController = {
         return res.status(400).json({ success: false, message: "Not enough tickets available." });
       }
   
-      // Check if the payment transaction is completed
-      const payment = await PaymentTransactions.findOne({
-        eventId: eventId,
-        paymentStatus: "completed",
-      });
-  
-      if (!payment) {
-        return res.status(400).json({ success: false, message: "Payment not completed." });
-      }
-  
       event.ticketQuantity = event.ticketQuantity - ticketQuantity;
 
       await event.save();
@@ -248,10 +239,11 @@ const eventController = {
       const enrollment = new EventAttendees({
         eventId: eventId,
         attendeeId: attendeeId,
-        paymentId: payment._id,
+        paymentId: paymentId,
         attendanceStatus: "attending",
         ticketQuantity: ticketQuantity,
-        totalCost: event.ticketPrice * ticketQuantity
+        totalCost: event.ticketPrice * ticketQuantity,
+        registrationDate: new Date(),
       });
   
       await enrollment.save();
@@ -353,6 +345,28 @@ const eventController = {
     catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Failed to update event feature status' });
+    }
+  },
+
+  searchEvents: async (req, res) => {
+    try {
+      const { query } = req.query; // Extract the 'query' parameter from the request query
+  
+      if (!query) {
+        return res.status(400).json({ message: 'Query parameter is required for searching.' });
+      }
+  
+      // Use a regular expression to perform a case-insensitive search by event name
+      const events = await Event.find({ eventName: { $regex: new RegExp(query, 'i') } });
+  
+      if (events.length === 0) {
+        return res.status(404).json({ message: 'No events found for the given query.' });
+      }
+  
+      res.status(200).json(events);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
     }
   }
   

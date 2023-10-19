@@ -1,20 +1,27 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Container, Row, Col, Form, Card, Button } from "react-bootstrap";
+import { Container, Row, Col,  } from "react-bootstrap";
 import EventCard from "../../components/user/EventCard";
+import { useLocation } from "react-router-dom";
 
-function Events() {
+function SearchResult() {
   const [search, setSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("All");
   const [eventData, setEventData] = useState([]);
 
+  const location = useLocation();
+  const searchQuery = new URLSearchParams(location.search).get("query") || "";
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8000/events/`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
+      console.log(searchQuery);
+
+      const response = await fetch(
+        `http://localhost:8000/events/search?query=${searchQuery}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
         }
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -31,18 +38,6 @@ function Events() {
     fetchData();
   }, [fetchData]);
 
-  // Filter events based on search and category
-  const filteredEvents = eventData.filter((event) => {
-    const eventCategory = event.eventName.toLowerCase();
-    return (
-      (search === "" ||
-        event.title.toLowerCase().includes(search.toLowerCase())) &&
-      (categoryFilter === "All" ||
-        eventCategory === categoryFilter.toLowerCase())
-    );
-  });
-
-
   return (
     <Container className="mt-4 mb-4">
       <Row>
@@ -56,9 +51,8 @@ function Events() {
           ))
         )}
       </Row>
-
     </Container>
   );
 }
 
-export default Events;
+export default SearchResult;

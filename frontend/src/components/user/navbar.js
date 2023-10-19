@@ -9,7 +9,7 @@ function Navigation() {
   const navigate = useNavigate();
 
   const handleSearch = () => {
-    navigate(`/search?query=${searchQuery}`);
+    navigate(CustomRoutes.Search.path+`?query=${searchQuery}`);
   };
 
   const handleLogout = () => {
@@ -69,7 +69,7 @@ function Navigation() {
                         Account
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
-                        <Dropdown.Item>Profile</Dropdown.Item>
+                        <Dropdown.Item onClick={() => navigate(CustomRoutes.MyProfile.path)}>Profile</Dropdown.Item>
                         <Dropdown.Item onClick={() => navigate(CustomRoutes.AttendeeEvents.path)}>
                           My Events
                         </Dropdown.Item>
