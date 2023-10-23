@@ -252,6 +252,16 @@ const userController = {
       console.error(error);
       return res.status(500).json({ error: 'Failed to delete attendee.' });
     }
+  },
+
+  async getAttendeeCount(req, res) {
+    try {
+      const attendeeCount = await Attendee.countDocuments({});
+      res.json({ count: attendeeCount });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Unable to retrieve attendee count' });
+    }
   }
 
   // Add more authentication-related methods as needed

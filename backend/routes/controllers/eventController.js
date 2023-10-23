@@ -188,8 +188,17 @@ const eventController = {
 
   getEventByOrganizerId: async (req, res) => {
     try {
-      const organizerId = req.params.organizerId;
-
+      const userId = req.params.userId; // Extract the userId from the request parameters
+  
+      // Find the organizer with the given userId
+      const organizer = await Organizer.findOne({ userId });
+  
+      if (!organizer) {
+        // Organizer not found
+        return res.status(404).json({ error: 'Organizer not found' });
+      }
+  
+      const organizerId = organizer._id;
       const events = await Event.find({ organizerId }).populate("organizerId")
         .populate("eventAddress", "street city state country zipCode")
         .select("eventName eventDescription eventDate ticketPrice ticketQuantity eventImages isFeatured");
@@ -368,7 +377,73 @@ const eventController = {
       console.error(error);
       res.status(500).json({ message: 'Server error' });
     }
+  },
+
+  getEventCountByOrganizerId: async (req, res) => {
+    try {
+      const userId = req.params.userId; // Extract the organizerId from the request parameters
+      const organizer = await Organizer.findOne({ userId: userId });
+
+      const organizerId = organizer._id;
+  
+      // Use the `countDocuments` method to count events with the given organizerId
+      const eventCount = await Event.countDocuments({ organizerId });
+  
+      res.json({ count: eventCount });
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while fetching event count' });
+    }
+  },
+
+  getEventsAttendedByAttendeesOfOrganizer: async (req, res) => {
+    try {
+      const userId = req.params.userId; // Extract the userId from the request parameters
+  
+      // Find the organizer with the given userId
+      const organizer = await Organizer.findOne({ userId });
+  
+      if (!organizer) {
+        // Organizer not found
+        return res.status(404).json({ error: 'Organizer not found' });
+      }
+  
+      const organizerId = organizer._id;
+  
+      // Use the $match stage to filter records for events created by the organizer
+      const events = await Event.find({ organizerId });
+  
+      const eventIds = events.map(event => event._id);
+  
+      // Use the $match stage to filter records for attendees of those events
+      const eventsAttendedCount = await EventAttendees.aggregate([
+        {
+          $match: {
+            eventId: { $in: eventIds }, // Match based on eventIds
+          },
+        },
+        {
+          $group: {
+            _id: '$eventId',
+            numberOfAttendees: { $sum: 1 }, // Sum the number of attendees for each event
+          },
+        },
+      ]);
+  
+      if (eventsAttendedCount.length > 0) {
+        const totalAttendees = eventsAttendedCount.reduce((total, event) => total + event.numberOfAttendees, 0);
+  
+        // Return the total number of attendees for events created by the organizer
+        res.json({ count: totalAttendees });
+      } else {
+        // No attendees for events created by the organizer
+        res.json({ count: 0 });
+      }
+    } catch (error) {
+      console.error('Error fetching events attended count:', error);
+      res.status(500).json({ error: 'An error occurred while fetching events attended count' });
+    }
   }
+  
   
 
 };

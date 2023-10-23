@@ -2,15 +2,17 @@ import React, { useEffect, useState, useCallback } from "react";
 import { EventTable } from "../../components/common/Tables";
 import { useNavigate } from "react-router-dom";
 import { Routes as CustomRoutes } from "../../routes";
+import jwt_decode from "jwt-decode";
 import BreadcrumbSection from "../../components/common/BreadcrumbSection";
 const EventList = () => {
   const [eventData, setEventData] = useState([]);
   const navigate = useNavigate();
 
   const token = localStorage.getItem('organizerToken');
+  const decodedToken = jwt_decode(token);
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8000/events/`, {
+      const response = await fetch(`http://localhost:8000/events/organizer/${decodedToken.userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -11,6 +11,8 @@ router.post('/logout', userController.logout); // User logout
 
 router.get('/', userController.getAllUsers); // get all users
 
+router.get('/count', userController.getAttendeeCount); 
+
 router.get('/:id', userController.getUser);
 router.get('/info/:id', userController.getUserById); // get all users
 router.put('/update/:id', userController.updateUserById); // get all users
