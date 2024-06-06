@@ -6,13 +6,14 @@ import jwt_decode from "jwt-decode";
 import BreadcrumbSection from "../../components/common/BreadcrumbSection";
 const EventList = () => {
   const [eventData, setEventData] = useState([]);
+  const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
   const token = localStorage.getItem('organizerToken');
   const decodedToken = jwt_decode(token);
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8000/events/organizer/${decodedToken.userId}`, {
+      const response = await fetch(`${API_URL}/events/organizer/${decodedToken.userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +36,7 @@ const EventList = () => {
     try {
       console.log("Deleting");
       const response = await fetch(
-        `http://localhost:8000/events/${eventId}`,
+        `${API_URL}/events/${eventId}`,
         {
           method: "DELETE",
           headers: {

@@ -8,6 +8,7 @@ import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
 const ManageProfile = () => {
   const [userData, setUserData] = useState();
   const [errorMessage, setErrorMessage] = useState(null);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const navigate = useNavigate();
   
@@ -17,7 +18,7 @@ const ManageProfile = () => {
   const fetchData = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/users/info/${decodedToken.userId}`,
+        `${API_URL}/users/info/${decodedToken.userId}`,
         {
           method: "GET",
           headers: {
@@ -40,7 +41,7 @@ const ManageProfile = () => {
   const updateAttendee = async (attendeeData) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/users/update/${decodedToken.userId}`,
+        `${API_URL}/users/update/${decodedToken.userId}`,
         {
           method: "PUT", // Use 'PUT' method to update the attendee
           headers: {

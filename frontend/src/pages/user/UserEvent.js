@@ -4,32 +4,34 @@ import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
 
 const AttendeeList = () => {
   const [eventAttendeeData, setEventAttendeeData] = useState([]);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const userToken = localStorage.getItem("userToken");
   const decodedToken = jwt_decode(userToken);
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch(`http://localhost:8000/events/events-attended/${decodedToken.userId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${userToken}`, // Include the token in the request headers
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json();
-      setEventAttendeeData(data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${API_URL}/events/events-attended/${decodedToken.userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${userToken}`, // Include the token in the request headers
+          }
+        });
+  
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+  
+        const data = await response.json();
+        setEventAttendeeData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
     fetchData();
   }, []);
 

@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 function SearchResult() {
   const [search, setSearch] = useState("");
   const [eventData, setEventData] = useState([]);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const location = useLocation();
   const searchQuery = new URLSearchParams(location.search).get("query") || "";
@@ -14,7 +15,7 @@ function SearchResult() {
       console.log(searchQuery);
 
       const response = await fetch(
-        `http://localhost:8000/events/search?query=${searchQuery}`,
+        `${API_URL}/events/search?query=${searchQuery}`,
         {
           method: "GET",
           headers: {

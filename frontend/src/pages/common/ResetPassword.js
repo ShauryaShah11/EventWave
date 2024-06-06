@@ -14,8 +14,8 @@ const ResetPassword = () => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get('id');
   const token = searchParams.get('token');
+  const API_URL = process.env.REACT_APP_API_URL;
 
-  console.log(id, token);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -30,7 +30,7 @@ const ResetPassword = () => {
 
     // Send a request to your server to reset the password
     try {
-      const response = await fetch('http://localhost:8000/password-reset/reset-password', {
+      const response = await fetch(`${API_URL}/password-reset/reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

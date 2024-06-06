@@ -7,8 +7,10 @@ import { Link } from 'react-router-dom';
 import { Alert } from '@themesberg/react-bootstrap';
 import { Routes as CustomRoutes } from "../../routes";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 async function sendMail(email) {
-  return fetch('http://localhost:8000/password-reset/forgot-password', {
+  return fetch(`${API_URL}/password-reset/forgot-password`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

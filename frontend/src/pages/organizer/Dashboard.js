@@ -24,6 +24,7 @@ const DashboardOverview = () => {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const navigate = useNavigate();
   const token = localStorage.getItem("organizerToken");
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const decodedToken = jwt_decode(token);
 
@@ -43,7 +44,7 @@ const DashboardOverview = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8000/revenue/revenue-by-month/${decodedToken.userId}`, {
+      const response = await fetch(`${API_URL}/revenue/revenue-by-month/${decodedToken.userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +86,7 @@ const DashboardOverview = () => {
         ],
       });
 
-      const eventCountResponse = await fetch(`http://localhost:8000/events/count/${decodedToken.userId}`, {
+      const eventCountResponse = await fetch(`${API_URL}/events/count/${decodedToken.userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -101,7 +102,7 @@ const DashboardOverview = () => {
 
       setEventCount(eventCountData.count);
 
-      const attendeeCountResponse = await fetch(`http://localhost:8000/events/count/events-attended/${decodedToken.userId}`, {
+      const attendeeCountResponse = await fetch(`${API_URL}/events/count/events-attended/${decodedToken.userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -117,7 +118,7 @@ const DashboardOverview = () => {
       console.log(attendeeCountData);
       setAttendeeCount(attendeeCountData.count);
 
-      const revenueResponse = await fetch(`http://localhost:8000/revenue/totalRevenue/${decodedToken.userId}`, {
+      const revenueResponse = await fetch(`${API_URL}/revenue/totalRevenue/${decodedToken.userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

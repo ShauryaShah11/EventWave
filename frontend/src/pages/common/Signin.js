@@ -10,8 +10,10 @@ import BgImage from "../../assets/img/illustrations/signin.svg";
 import { Alert } from '@themesberg/react-bootstrap';
 import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 async function loginUser(credentials) {
-  return fetch('http://localhost:8000/users/login', {
+  return fetch(`${API_URL}/users/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

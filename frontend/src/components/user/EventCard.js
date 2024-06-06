@@ -9,7 +9,7 @@ const EventCard = ({ event }) => {
       <Card className="h-100">
         <div style={{ width: "100%", height: "200px", overflow: "hidden" }}>
           <Card.Img
-            src={`http://localhost:8000/images/${event.eventImages[0]}`}
+            src={event.eventImages[0]}
             alt={event.title}
             className="card-img-top"
             style={{ objectFit: "cover", height: "100%" }}

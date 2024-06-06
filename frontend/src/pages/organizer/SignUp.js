@@ -17,6 +17,7 @@ import BgImage from "../../assets/img/illustrations/signin.svg";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const [formData, setFormData] = useState({
     username: "",
@@ -38,7 +39,7 @@ const Signup = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/organizer/register', {
+      const response = await fetch(`${API_URL}/organizer/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

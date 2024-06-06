@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import BreadcrumbSection from "../../components/common/BreadcrumbSection";
 const EventAttendeeList = () => {
   const [eventAttendeeData, setEventAttendeeData] = useState([]);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const { eventId } = useParams();
   
@@ -11,7 +12,7 @@ const EventAttendeeList = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/events/${eventId}/attendees`, {
+      const response = await fetch(`${API_URL}/events/${eventId}/attendees`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

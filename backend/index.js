@@ -7,13 +7,13 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import Razorpay from "razorpay";
 // Import your routes and data models here
-import userRoutes from './routes/api/userRoutes.js';
-import eventRoutes from './routes/api/eventRoutes.js';
-import organizerRoutes from './routes/api/organizerRoutes.js';
-import eventFeedbackRoutes from './routes/api/eventFeedbackRoutes.js';
-import paymentRoutes from './routes/api/paymentRoutes.js';
-import passwordResetRoutes from './routes/api/passwordResetRoutes.js';
-import revenueRoutes from './routes/api/revenueRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import eventRoutes from './routes/eventRoutes.js';
+import organizerRoutes from './routes/organizerRoutes.js';
+import eventFeedbackRoutes from './routes/eventFeedbackRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+import passwordResetRoutes from './routes/passwordResetRoutes.js';
+import revenueRoutes from './routes/revenueRoutes.js';
 
 dotenv.config();
 
@@ -51,8 +51,7 @@ export const instance = new Razorpay({
 });
 
 // Serve images from the specified directory
-const imagesDirectory = join(__dirname, 'uploads');
-app.use('/images', express.static(imagesDirectory));
+
 
 // Implement your routes
 app.use('/events', eventRoutes);
@@ -63,7 +62,7 @@ app.use('/payments', paymentRoutes);
 app.use('/password-reset', passwordResetRoutes);
 app.use('/revenue', revenueRoutes);
 
-app.get("/api/getkey", (req, res) =>
+app.get("/getkey", (req, res) =>
   res.status(200).json({ key: process.env.RAZORPAY_API_KEY })
 );
 

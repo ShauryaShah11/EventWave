@@ -6,10 +6,11 @@ function Events() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [eventData, setEventData] = useState([]);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8000/events/`, {
+      const response = await fetch(`${API_URL}/events/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"

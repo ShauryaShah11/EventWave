@@ -17,6 +17,8 @@ import axios from "axios";
 import "./EventDetails.css";
 
 function EventDetails() {
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const [eventData, setEventData] = useState(null);
   const [ticketQuantity, setTicketQuantity] = useState(1);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -41,7 +43,7 @@ function EventDetails() {
     const decodedToken = jwt_decode(userToken);
     try {
       const registrationResponse = await fetch(
-        "http://localhost:8000/events/enrollment",
+        `${API_URL}/events/enrollment`,
         {
           method: "POST",
           headers: {
@@ -78,7 +80,7 @@ function EventDetails() {
     }
     try {
       const response = await fetch(
-        `http://localhost:8000/event-feedback/create`,
+        `${API_URL}/event-feedback/create`,
         {
           method: "POST",
           headers: {
@@ -108,7 +110,7 @@ function EventDetails() {
     // In this dummy implementation, we set some example reviews.
     try {
       const response = await fetch(
-        `http://localhost:8000/event-feedback/${eventId}`,
+        `${API_URL}/event-feedback/${eventId}`,
         {
           method: "GET",
           headers: {
@@ -130,7 +132,7 @@ function EventDetails() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/events/${eventId}`, {
+      const response = await fetch(`${API_URL}/events/${eventId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
@@ -162,19 +164,17 @@ function EventDetails() {
       const userToken = localStorage.getItem("userToken");
       const decodedToken = jwt_decode(userToken);
 
-      const {
-        data: { key }
-      } = await axios.get("http://localhost:8000/api/getkey");
+      const key = process.env.REACT_APP_RAZORPAY_API_KEY;
       const totalAmount = eventData.ticketPrice * ticketQuantity;
       const {
         data: { order }
-      } = await axios.post("http://localhost:8000/payments/checkout", {
+      } = await axios.post(`${API_URL}/payments/checkout`, {
         amount: totalAmount
       });
 
       console.log(order);
       const { data } = await axios.get(
-        `http://localhost:8000/users/info/${decodedToken.userId}`
+        `${API_URL}/users/info/${decodedToken.userId}`
       );
       const options = {
         key,
@@ -185,7 +185,7 @@ function EventDetails() {
         order_id: order.id,
         handler: function (response) {
           axios
-            .post("http://localhost:8000/payments/paymentverification", {
+            .post(`${API_URL}/payments/paymentverification`, {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
               razorpay_signature: response.razorpay_signature
@@ -257,7 +257,7 @@ function EventDetails() {
                 <Carousel.Item key={index}>
                   <div className="image-container">
                     <Image
-                      src={`http://localhost:8000/images/${image}`}
+                      src={image}
                       alt={`${eventData.eventName} Image ${index}`}
                       className="d-block w-100"
                     />

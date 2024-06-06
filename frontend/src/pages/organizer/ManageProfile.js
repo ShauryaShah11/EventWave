@@ -9,6 +9,7 @@ const ManageProfile = () => {
   const [organizerData, setOrganizerData] = useState();
   const [errorMessage, setErrorMessage] = useState(null);
   const token = localStorage.getItem('organizerToken');
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const navigate = useNavigate();
   const decodedToken = jwt_decode(token);
@@ -17,7 +18,7 @@ const ManageProfile = () => {
   const fetchData = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/organizer/${decodedToken.userId}`,
+        `${API_URL}/organizer/${decodedToken.userId}`,
         {
           method: "GET",
           headers: {
@@ -40,7 +41,7 @@ const ManageProfile = () => {
   const updateOrganizer = async (organizerData) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/organizer/${decodedToken.userId}`,
+        `${API_URL}/organizer/${decodedToken.userId}`,
         {
           method: "PUT", // Use 'PUT' method to update the attendee
           headers: {

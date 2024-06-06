@@ -8,10 +8,11 @@ const AttendeeList = () => {
   const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
 
+  const API_URL = process.env.REACT_APP_API_URL;
   const token = localStorage.getItem('adminToken');
   const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:8000/users/", {
+      const response = await fetch(`${API_URL}/users/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -33,7 +34,7 @@ const AttendeeList = () => {
   const deleteAttendee = async (attendeeId) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/users/${attendeeId}`,
+        `${API_URL}/users/${attendeeId}`,
         {
           method: "DELETE",
           headers: {

@@ -15,11 +15,12 @@ const EditAttendee = () => {
   const searchParams = new URLSearchParams(location.search);
   const attendeeId = searchParams.get("id");
   const token = localStorage.getItem("adminToken");
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/users/${attendeeId}`,
+        `${API_URL}/users/${attendeeId}`,
         {
           method: "GET",
           headers: {
@@ -42,7 +43,7 @@ const EditAttendee = () => {
   const updateAttendee = async (attendeeData) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/users/${attendeeId}`,
+        `${API_URL}/users/${attendeeId}`,
         {
           method: "PUT", // Use 'PUT' method to update the attendee
           headers: {

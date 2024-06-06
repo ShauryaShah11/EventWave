@@ -8,10 +8,11 @@ const EventList = () => {
   const [eventData, setEventData] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem('adminToken')
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8000/events/`, {
+      const response = await fetch(`${API_URL}/events/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +36,7 @@ const EventList = () => {
     try {
       console.log("Deleting");
       const response = await fetch(
-        `http://localhost:8000/events/${eventId}`,
+        `${API_URL}/events/${eventId}`,
         {
           method: "DELETE",
           headers: {
@@ -72,10 +73,9 @@ const EventList = () => {
   };
 
   const handleToggleFeature = async (eventId, isFeatured) => {
-    console.log("hello world");
     try {
       const response = await fetch(
-        `http://localhost:8000/events/toggle-feature/${eventId}`,
+        `${API_URL}/events/toggle-feature/${eventId}`,
         {
           method: "PUT",
           headers: {

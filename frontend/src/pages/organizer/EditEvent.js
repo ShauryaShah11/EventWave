@@ -7,7 +7,9 @@ import { Routes as CustomRoutes } from "../../routes";
 const EditEvent = () => {
   const [eventData, setEventData] = useState();
   const [errorMessage, setErrorMessage] = useState(null);
-  const token = localStorage.getItem('organizerToken');
+  const API_URL = process.env.REACT_APP_API_URL;
+  
+  const token = localStorage.getItem('organizerToken') ?? localStorage.getItem('adminToken');
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,7 +19,7 @@ const EditEvent = () => {
   const fetchData = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/events/${eventId}`,
+        `${API_URL}/events/${eventId}`,
         {
           method: "GET",
           headers: {
@@ -36,7 +38,7 @@ const EditEvent = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  },[eventId]);
+  },[eventId, token]);
 
   const updateEvent = async (eventData) => {
     try {
@@ -51,14 +53,14 @@ const EditEvent = () => {
   
       // Append each file to the form data
       eventData.eventImages.forEach((file) => {
-        formData.append("eventImages", file);
+        formData.append("file", file);
       });
   
       // Append address fields to the form data
       formData.append("address", JSON.stringify(eventData.address));
   
       const response = await fetch(
-        `http://localhost:8000/events/${eventId}`,
+        `${API_URL}/events/${eventId}`,
         {
           method: "PUT", // Use 'PUT' method to update the event
           body: formData, // Use the FormData object as the body

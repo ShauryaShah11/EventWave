@@ -7,6 +7,7 @@ import jwt_decode from "jwt-decode"; // A library to decode JWT tokens
 
 const AddEvent = () => {
   const [errorMessage, setErrorMessage] = useState(null);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const navigate = useNavigate();
   const token = localStorage.getItem('organizerToken');
@@ -33,10 +34,10 @@ const AddEvent = () => {
       
       // Append each file to the FormData object with the correct name
       eventData.eventImages.forEach((file) => {
-        formData.append("eventImages", file);
+        formData.append("file", file);
       });
       
-      const response = await fetch(`http://localhost:8000/events/create`, {
+      const response = await fetch(`${API_URL}/events/create`, {
         method: "POST",
         body: formData,
         headers: {

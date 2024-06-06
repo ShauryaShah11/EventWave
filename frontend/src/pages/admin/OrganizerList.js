@@ -7,11 +7,12 @@ import BreadcrumbSection from "../../components/common/BreadcrumbSection";
 const OrganizerList = () => {
   const [organizerData, setOrganizerData] = useState([]);
   const navigate = useNavigate();
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const token = localStorage.getItem('adminToken')
   const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:8000/organizer/", {
+      const response = await fetch(`${API_URL}/organizer/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +36,7 @@ const OrganizerList = () => {
     try {
       console.log("Deleting");
       const response = await fetch(
-        `http://localhost:8000/organizer/${organizerId}`,
+        `${API_URL}/organizer/${organizerId}`,
         {
           method: "DELETE",
           headers: {

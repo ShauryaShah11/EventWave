@@ -13,13 +13,15 @@ import { Routes as CustomRoutes } from "../../routes";
 function Home() {
   const [featuredEvents, setFeaturedEvents] = useState([]);
 
+  const API_URL = process.env.REACT_APP_API_URL;
+  console.log(process.env.REACT_APP_API_URL)
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8000/events/featured`, {
+      const response = await fetch(`${API_URL}/events/featured`, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       });
 
       if (!response.ok) {
@@ -43,15 +45,23 @@ function Home() {
       <header
         className="hero text-white text-center py-11"
         style={{
-          background: "url('https://images.pexels.com/photos/2952834/pexels-photo-2952834.jpeg?auto=compress&cs=tinysrgb&w=1920') center/cover no-repeat",
+          background:
+            "url('https://images.pexels.com/photos/2952834/pexels-photo-2952834.jpeg?auto=compress&cs=tinysrgb&w=1920') center/cover no-repeat",
         }}
       >
         <Carousel controls={false} indicators={false} interval={3000}>
           <Carousel.Item>
             <Container>
-              <h1 className="display-3 mt-5">Welcome to Occasia Event Management</h1>
-              <p className="lead mt-3">Plan, organize, and manage your events with ease.</p>
-              <Link to={CustomRoutes.Events.path} className="btn btn-primary btn-lg mt-4">
+              <h1 className="display-3 mt-5">
+                Welcome to Occasia Event Management
+              </h1>
+              <p className="lead mt-3">
+                Plan, organize, and manage your events with ease.
+              </p>
+              <Link
+                to={CustomRoutes.Events.path}
+                className="btn btn-primary btn-lg mt-4"
+              >
                 Explore Events
               </Link>
             </Container>
@@ -70,12 +80,23 @@ function Home() {
                 <Card className="mb-4">
                   <Card.Img
                     variant="top"
-                    src={`http://localhost:8000/images/${event.eventImages[0]}`}
+                    src={event.eventImages[0]}
                     alt={event.eventName}
+                    style={{
+                      height: "200px",
+                      objectFit: "cover",
+                      width: "100%",
+                    }} // Inline CSS
                   />
                   <Card.Body className="d-flex flex-column align-items-center">
-                    <Card.Title className="text-center">{event.eventName}</Card.Title>
-                    <Button as={Link} to={`${CustomRoutes.EventDetails.path}?id=${event._id}`} variant="primary">
+                    <Card.Title className="text-center">
+                      {event.eventName}
+                    </Card.Title>
+                    <Button
+                      as={Link}
+                      to={`${CustomRoutes.EventDetails.path}?id=${event._id}`}
+                      variant="primary"
+                    >
                       Details
                     </Button>
                   </Card.Body>
@@ -93,12 +114,15 @@ function Home() {
           <Row>
             <Col xs={12} md={6}>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla condimentum tortor vel purus venenatis, et congue lorem mollis.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+                condimentum tortor vel purus venenatis, et congue lorem mollis.
               </p>
             </Col>
             <Col xs={12} md={6}>
               <p>
-                Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.
+                Vestibulum id ligula porta felis euismod semper. Praesent
+                commodo cursus magna, vel scelerisque nisl consectetur. Fusce
+                dapibus, tellus ac cursus commodo.
               </p>
             </Col>
           </Row>

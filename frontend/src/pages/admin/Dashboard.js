@@ -22,6 +22,8 @@ const DashboardOverview = () => {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const navigate = useNavigate();
   const token = localStorage.getItem("adminToken");
+  const API_URL = process.env.REACT_APP_API_URL;
+
 
   // Sample chart data
   const [barChartData, setBarChartData] = useState({
@@ -39,7 +41,7 @@ const DashboardOverview = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8000/revenue/revenue-by-month`, {
+      const response = await fetch(`${API_URL}/revenue/revenue-by-month`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -81,7 +83,7 @@ const DashboardOverview = () => {
         ],
       });
 
-      const attendeeCountResponse = await fetch(`http://localhost:8000/users/count`, {
+      const attendeeCountResponse = await fetch(`${API_URL}/users/count`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -97,7 +99,7 @@ const DashboardOverview = () => {
 
       setAttendeeCount(attendeeCountData.count);
 
-      const organizerCountResponse = await fetch(`http://localhost:8000/organizer/count`, {
+      const organizerCountResponse = await fetch(`${API_URL}/organizer/count`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +115,7 @@ const DashboardOverview = () => {
 
       setOrganizerCount(organizerCountData.count);
 
-      const revenueResponse = await fetch(`http://localhost:8000/revenue/totalRevenue`, {
+      const revenueResponse = await fetch(`${API_URL}/revenue/totalRevenue`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

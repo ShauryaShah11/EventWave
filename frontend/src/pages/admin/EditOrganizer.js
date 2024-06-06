@@ -10,6 +10,7 @@ const EditOrganizer = () => {
   const [organizerData, setOrganizerData] = useState();
   const [errorMessage, setErrorMessage] = useState(null);
   const token = localStorage.getItem('adminToken')
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,7 +20,7 @@ const EditOrganizer = () => {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/organizer/${organizerId}`,
+        `${API_URL}/organizer/${organizerId}`,
         {
           method: "GET",
           headers: {
@@ -42,7 +43,7 @@ const EditOrganizer = () => {
   const updateOrganizer = async (organizerData) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/organizer/${organizerId}`,
+        `${API_URL}/organizer/${organizerId}`,
         {
           method: "PUT", // Use 'PUT' method to update the attendee
           headers: {
